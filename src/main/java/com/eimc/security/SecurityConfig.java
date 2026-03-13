@@ -61,7 +61,7 @@ public class SecurityConfig {
      *      UserDetailsService defines
      *      custom in-memory administrative
      *      and standard accounts authorized
-     *      to access the user resources.
+     *      to access the employee resources.
      */
 
     @Bean
