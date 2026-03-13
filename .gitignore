@@ -1,0 +1,24 @@
+## Build and Project Metadata
+target/
+out/
+
+## Maven Wrapper
+!mvnw
+!mvnw.cmd
+!.mvn/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+# Environment variables
+.env
