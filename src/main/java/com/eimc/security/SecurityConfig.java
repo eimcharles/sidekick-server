@@ -48,6 +48,8 @@ public class SecurityConfig {
                         /// Whitelist the root and index file
                         .requestMatchers("/", "/index.html").permitAll()
 
+                        .requestMatchers("management/**").hasRole(UserRole.ADMIN.name())
+
                         /// Require credentials for the remaining endpoints
                         .anyRequest().authenticated())
 
@@ -70,13 +72,13 @@ public class SecurityConfig {
         UserDetails admin = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("admin"))              ///  Password encoding
-                .roles("ADMIN")                                                     ///  ROLE_ADMIN
+                .roles(UserRole.ADMIN.name())                                       ///  ROLE_ADMIN
                 .build();
 
         UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder.encode("user"))              ///  Password encoding
-                .roles("USER")                                                     ///  ROLE_USER
+                .username("employee")
+                .password(passwordEncoder.encode("password123"))       ///  Password encoding
+                .roles(UserRole.USER.name())                                       ///  ROLE_USER
                 .build();
 
         return new InMemoryUserDetailsManager(admin, user);
