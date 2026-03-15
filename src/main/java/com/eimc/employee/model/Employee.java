@@ -6,15 +6,15 @@ import java.util.UUID;
 public class Employee {
 
     private UUID employeeId;
-    private String role;
+    private String employeePosition;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
 
-    public Employee(UUID employeeId, String role, String firstName, String lastName, String email, String password) {
+    public Employee(UUID employeeId, String employeePosition, String firstName, String lastName, String email, String password) {
         this.employeeId = employeeId;
-        this.role = role;
+        this.employeePosition = employeePosition;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -25,8 +25,8 @@ public class Employee {
         return employeeId;
     }
 
-    public String getRole() {
-        return role;
+    public String getEmployeePosition() {
+        return employeePosition;
     }
 
     public String getFirstName() {
@@ -49,8 +49,8 @@ public class Employee {
         this.employeeId = employeeId;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setEmployeePosition(String employeePosition) {
+        this.employeePosition = employeePosition;
     }
 
     public void setFirstName(String firstName) {
@@ -73,16 +73,17 @@ public class Employee {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return Objects.equals(employeeId, employee.employeeId) &&
-                Objects.equals(firstName, employee.firstName) &&
-                Objects.equals(lastName, employee.lastName) &&
-                Objects.equals(email, employee.email) &&
-                Objects.equals(password, employee.password);
+        return Objects.equals(employeeId, employee.employeeId)
+                && Objects.equals(employeePosition, employee.employeePosition)
+                && Objects.equals(firstName, employee.firstName)
+                && Objects.equals(lastName, employee.lastName)
+                && Objects.equals(email, employee.email)
+                && Objects.equals(password, employee.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(employeeId, firstName, lastName, email, password);
+        return Objects.hash(employeeId, employeePosition, firstName, lastName, email, password);
     }
 
 }
