@@ -3,6 +3,7 @@ package com.eimc.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -14,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 
 /**
  *      @EnableWebSecurity disables
@@ -21,6 +23,12 @@ import org.springframework.security.web.SecurityFilterChain;
  *      settings and enables
  *      developer defined security
  *      configurations for endpoints.
+ *
+ *      @EnableMethodSecurity enables
+ *      Spring Security's method-level Security.
+ *      Allows for @PreAuthorize annotations for
+ *      authorities on controller methods.
+ *
  * */
 
 public class SecurityConfig {
@@ -32,7 +40,7 @@ public class SecurityConfig {
     }
 
     /**
-     *      SecurityFilterChain
+     *      filterChain
      *      defines security
      *      configuration for
      *      endpoint access.
@@ -62,7 +70,7 @@ public class SecurityConfig {
     }
 
     /**
-     *      UserDetailsService defines
+     *      userDetailsService defines
      *      custom in-memory administrative
      *      and standard accounts authorized
      *      to access the employee resources.
@@ -74,19 +82,19 @@ public class SecurityConfig {
         UserDetails admin = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("admin"))              ///  Password encoding
-                .roles(UserRole.ADMIN.name())                                       ///  ROLE_ADMIN
+                .authorities(UserRole.ADMIN.getGrantedAuthorities())                ///  ROLES + PERMISSIONS
                 .build();
 
         UserDetails adminTrainee = User.builder()
                 .username("adminTrainee")
                 .password(passwordEncoder.encode("admin"))              ///  Password encoding
-                .roles(UserRole.ADMIN_TRAINEE.name())                               ///  ROLE_ADMIN_TRAINEE
+                .authorities(UserRole.ADMIN_TRAINEE.getGrantedAuthorities())        ///  ROLES + PERMISSIONS
                 .build();
 
         UserDetails user = User.builder()
                 .username("employee")
                 .password(passwordEncoder.encode("password123"))       ///  Password encoding
-                .roles(UserRole.USER.name())                                       ///  ROLE_USER
+                .authorities(UserRole.USER.getGrantedAuthorities())                ///  ROLES + PERMISSIONS
                 .build();
 
         return new InMemoryUserDetailsManager(admin, adminTrainee ,user);

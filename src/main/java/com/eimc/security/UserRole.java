@@ -1,8 +1,11 @@
 package com.eimc.security;
 
 import com.google.common.collect.Sets;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.eimc.security.UserPermissions.*;
 
@@ -34,4 +37,24 @@ public enum UserRole {
     public Set<UserPermissions> getUserPermissions() {
         return userPermissions;
     }
+
+    /**
+     *      getGrantedAuthorities transforms
+     *      the user's role and associated permissions
+     *      into a set of SimpleGrantedAuthority objects
+     *      compatible with Spring Security.
+     * */
+
+    public Set<SimpleGrantedAuthority> getGrantedAuthorities(){
+
+        /// Map each UserPermissions enum to a SimpleGrantedAuthority
+        Set<SimpleGrantedAuthority> authorities = getUserPermissions().stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+                .collect(Collectors.toSet());
+
+        /// Adds prefix "ROLE" to for user roles
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+        return authorities;
+    }
+
 }
