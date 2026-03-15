@@ -45,10 +45,12 @@ public class SecurityConfig {
                 ///  Require the client to provide credentials
                 .authorizeHttpRequests(auth -> auth
 
-                        /// Whitelist the root and index file
-                        .requestMatchers("/", "/index.html").permitAll()
+                        /// Whitelist the root, index.html and Swagger docs
+                        .requestMatchers("/", "/index.html",
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
-                        .requestMatchers("management/**").hasRole(UserRole.ADMIN.name())
+                        /// Restricts management namespace to ADMIN role
+                        .requestMatchers("/management/**").hasRole(UserRole.ADMIN.name())
 
                         /// Require credentials for the remaining endpoints
                         .anyRequest().authenticated())
