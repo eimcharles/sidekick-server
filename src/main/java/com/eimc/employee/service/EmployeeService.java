@@ -17,6 +17,21 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
+    public Employee createEmployee(Employee employee) {
+
+        Employee createdEmployee = new Employee(
+                UUID.randomUUID(),
+                employee.getEmployeePosition(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getEmail(),
+                employee.getPassword()
+        );
+
+        employeeRepository.addEmployee(createdEmployee);
+        return createdEmployee;
+    }
+
     public Employee getEmployeeByEmployeeId(UUID employeeId){
         return employeeRepository.getEmployeeList()
                 .stream()
@@ -28,4 +43,5 @@ public class EmployeeService {
     public List<Employee> getEmployees(){
         return employeeRepository.getEmployeeList();
     }
+
 }

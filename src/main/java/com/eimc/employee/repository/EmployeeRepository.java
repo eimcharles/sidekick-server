@@ -24,6 +24,10 @@ public class EmployeeRepository {
 
     ));
 
+    public void addEmployee(Employee employee){
+        getEmployeeList().add(employee);
+    }
+
     public List<Employee> getEmployeeList() {
         return EMPLOYEE_LIST;
     }

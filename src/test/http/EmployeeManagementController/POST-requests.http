@@ -1,0 +1,13 @@
+### Admin: POST request to create a new employee, returns 200
+POST http://localhost:8080/management/api/v1/employees
+Content-Type: application/json
+Authorization: Basic admin admin
+
+{
+  "employeeId": "7f3a8c1e-9d2b-4b6a-8c7d-ef0123456789",
+  "employeePosition": "Senior Developer",
+  "firstName": "Micheal",
+  "lastName": "Jordan",
+  "email": "mj@me.com",
+  "password": "michealJ123"
+}
