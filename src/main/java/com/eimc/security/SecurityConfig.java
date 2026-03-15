@@ -49,8 +49,8 @@ public class SecurityConfig {
                         .requestMatchers("/", "/index.html",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
-                        /// Restricts management namespace to ADMIN role
-                        .requestMatchers("/management/**").hasRole(UserRole.ADMIN.name())
+                        /// Restricts management namespace to ADMIN and ADMIN_TRAINEE roles
+                        .requestMatchers("/management/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.ADMIN_TRAINEE.name())
 
                         /// Require credentials for the remaining endpoints
                         .anyRequest().authenticated())
@@ -77,13 +77,19 @@ public class SecurityConfig {
                 .roles(UserRole.ADMIN.name())                                       ///  ROLE_ADMIN
                 .build();
 
+        UserDetails adminTrainee = User.builder()
+                .username("adminTrainee")
+                .password(passwordEncoder.encode("admin"))              ///  Password encoding
+                .roles(UserRole.ADMIN_TRAINEE.name())                               ///  ROLE_ADMIN_TRAINEE
+                .build();
+
         UserDetails user = User.builder()
                 .username("employee")
                 .password(passwordEncoder.encode("password123"))       ///  Password encoding
                 .roles(UserRole.USER.name())                                       ///  ROLE_USER
                 .build();
 
-        return new InMemoryUserDetailsManager(admin, user);
+        return new InMemoryUserDetailsManager(admin, adminTrainee ,user);
 
     }
 
