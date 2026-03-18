@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -50,7 +53,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                ///  Require the client to provide credentials
+
+                /// 3rd: write the CsrfToken into a cookie for browser to store
+                .csrf(csrf -> csrf
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+
+                        /// Make the CsrfToken available as a request attribute.
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+
+
+                /// 4th: Authorization requires the client to provide credentials
                 .authorizeHttpRequests(auth -> auth
 
                         /// Whitelist the root, index.html and Swagger docs
@@ -63,8 +75,11 @@ public class SecurityConfig {
                         /// Require credentials for the remaining endpoints
                         .anyRequest().authenticated())
 
-                ///  Enable Basic Auth protocol (Base64 username:password in header)
-                .httpBasic(Customizer.withDefaults());
+                /// 1st: Basic Authentication protocol runs (Base64 username:password in header)
+                .httpBasic(Customizer.withDefaults())
+
+                /// 2nd: Additional filter to trigger CsrfToken generation after authorization header authentication
+                .addFilterAfter(new CsrfHeaderFilter(), BasicAuthenticationFilter.class);
 
         return http.build();
     }

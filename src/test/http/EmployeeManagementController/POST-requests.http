@@ -1,4 +1,19 @@
-### Admin: POST request to create a new employee, returns 200, has authority
+### Admin: POST request to create a new employee, returns 200, has authority and CsrfToken
+POST http://localhost:8080/management/api/v1/employees
+Content-Type: application/json
+Authorization: Basic admin admin
+X-XSRF-TOKEN: ef7a2e95-7237-4675-bc5f-d5b27b31c76c
+
+{
+  "employeeId": "7f3a8c1e-9d2b-4b6a-8c7d-ef0123456789",
+  "employeePosition": "Senior Developer",
+  "firstName": "Micheal",
+  "lastName": "Jordan",
+  "email": "mj@me.com",
+  "password": "michealJ123"
+}
+
+### Admin: POST request to create a new employee, returns 401, has authority, no CsrfToken
 POST http://localhost:8080/management/api/v1/employees
 Content-Type: application/json
 Authorization: Basic admin admin
@@ -12,10 +27,11 @@ Authorization: Basic admin admin
   "password": "michealJ123"
 }
 
-### AdminTrainee: POST request to create a new employee, returns 403, doesn't have authority
+### AdminTrainee: POST request to create a new employee, returns 403, doesn't have authority, has CsrfToken
 POST http://localhost:8080/management/api/v1/employees
 Content-Type: application/json
 Authorization: Basic adminTrainee admin
+X-XSRF-TOKEN: ef7a2e95-7237-4675-bc5f-d5b27b31c76c
 
 {
   "employeeId": "7f3a8c1e-9d2b-4b6a-8c7d-ef0123456789",
