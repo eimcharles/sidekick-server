@@ -57,14 +57,14 @@ public class SecurityConfig {
 
         http
 
-                /// 3rd: write the CsrfToken into a cookie for browser to store
+                /// Write the CsrfToken into a cookie for browser to store
                 .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 
                         /// Make the CsrfToken available as a request attribute.
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 
-                /// 4th: Authorization requires the client to provide credentials
+                /// Authorization requires the client to provide credentials
                 .authorizeHttpRequests(auth -> auth
 
                         /// Whitelist the root, index.html and Swagger docs
@@ -77,7 +77,7 @@ public class SecurityConfig {
                         /// Require credentials for the remaining endpoints
                         .anyRequest().authenticated())
 
-                /// Basic Authentication protocol (Base64 username:password in header)
+                /// Uncomment for basic Authentication protocol (Base64 username:password in header)
                 /// .httpBasic(Customizer.withDefaults())
 
                 /// Form Based Authentication with login redirect to dashboard
@@ -88,14 +88,25 @@ public class SecurityConfig {
                 .rememberMe(remember -> remember
                         .tokenValiditySeconds(2592000)
                         /// Hardcoding the key ensures the cookie remains valid after server restarts
-                        .key("uniqueAndSecret"))
+                        .key("uniqueAndSecret")
                         /// Look up the user account in memory once the cookie is validated
-                        .userDetailsService(userDetailsService())
+                        .userDetailsService(userDetailsService()))
 
-                /// 2nd: Additional filter to trigger CsrfToken generation after basic auth
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        ///  For logout success message in login.html
+                        .logoutSuccessUrl("/login?logout")
+                        ///  Clear data and invalidate session
+                        .deleteCookies("JSESSIONID", "remember-me")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        ///  Allows all users to logout, with data cleared and session invalidated
+                        .permitAll())
+
+                ///  Uncomment for additional filter to trigger CsrfToken generation after basic auth
                 /// .addFilterAfter(new CsrfHeaderFilter(), BasicAuthenticationFilter.class);
 
-                /// 2nd: Additional filter to trigger CsrfToken generation after form based auth
+                /// Additional filter to trigger CsrfToken generation after form based auth
                 .addFilterAfter(new CsrfHeaderFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
