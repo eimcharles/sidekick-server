@@ -17,6 +17,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
+import java.util.concurrent.TimeUnit;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -62,7 +64,6 @@ public class SecurityConfig {
                         /// Make the CsrfToken available as a request attribute.
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 
-
                 /// 4th: Authorization requires the client to provide credentials
                 .authorizeHttpRequests(auth -> auth
 
@@ -79,9 +80,17 @@ public class SecurityConfig {
                 /// Basic Authentication protocol (Base64 username:password in header)
                 /// .httpBasic(Customizer.withDefaults())
 
-                /// Form Based Authentication with Login redirect
+                /// Form Based Authentication with login redirect to dashboard
                 .formLogin(form -> form.loginPage("/login")
-                        .permitAll())
+                        .permitAll().defaultSuccessUrl("/dashboard",true))
+
+                ///  Sets remember-me cookie expiration to 30 days (in seconds)
+                .rememberMe(remember -> remember
+                        .tokenValiditySeconds(2592000)
+                        /// Hardcoding the key ensures the cookie remains valid after server restarts
+                        .key("uniqueAndSecret"))
+                        /// Look up the user account in memory once the cookie is validated
+                        .userDetailsService(userDetailsService())
 
                 /// 2nd: Additional filter to trigger CsrfToken generation after basic auth
                 /// .addFilterAfter(new CsrfHeaderFilter(), BasicAuthenticationFilter.class);
