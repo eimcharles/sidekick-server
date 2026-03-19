@@ -29,6 +29,9 @@
                     <input type="checkbox" id="remember-me" name="remember-me">
                 </p>
 
+                <!--    Displays if the URL of current page has query parameter ?logout   -->
+                <p th:if="${param.logout}" style="color: green;"> You have been successfully logged out. </p>
+
                 <input name="_csrf" type="hidden" th:value="${_csrf.token}">
                 <button type="submit" class="primary">Login in</button>
 
