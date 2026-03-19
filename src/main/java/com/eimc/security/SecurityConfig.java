@@ -80,15 +80,23 @@ public class SecurityConfig {
                 /// Uncomment for basic Authentication protocol (Base64 username:password in header)
                 /// .httpBasic(Customizer.withDefaults())
 
-                /// Form Based Authentication with login redirect to dashboard
-                .formLogin(form -> form.loginPage("/login")
-                        .permitAll().defaultSuccessUrl("/dashboard",true))
+                /// Form Based Authentication with login
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                        ///  Redirect to dashboard
+                        .defaultSuccessUrl("/dashboard",true)
+                        ///  Form parameter
+                        .usernameParameter("username")
+                        .passwordParameter("password"))
 
                 ///  Sets remember-me cookie expiration to 30 days (in seconds)
                 .rememberMe(remember -> remember
                         .tokenValiditySeconds(2592000)
                         /// Hardcoding the key ensures the cookie remains valid after server restarts
                         .key("uniqueAndSecret")
+                        ///  Form parameter
+                        .rememberMeParameter("remember-me")
                         /// Look up the user account in memory once the cookie is validated
                         .userDetailsService(userDetailsService()))
 
