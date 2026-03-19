@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
@@ -75,11 +76,18 @@ public class SecurityConfig {
                         /// Require credentials for the remaining endpoints
                         .anyRequest().authenticated())
 
-                /// 1st: Basic Authentication protocol runs (Base64 username:password in header)
-                .httpBasic(Customizer.withDefaults())
+                /// Basic Authentication protocol (Base64 username:password in header)
+                /// .httpBasic(Customizer.withDefaults())
 
-                /// 2nd: Additional filter to trigger CsrfToken generation after authorization header authentication
-                .addFilterAfter(new CsrfHeaderFilter(), BasicAuthenticationFilter.class);
+                /// Form Based Authentication with Login redirect
+                .formLogin(form -> form.loginPage("/login")
+                        .permitAll())
+
+                /// 2nd: Additional filter to trigger CsrfToken generation after basic auth
+                /// .addFilterAfter(new CsrfHeaderFilter(), BasicAuthenticationFilter.class);
+
+                /// 2nd: Additional filter to trigger CsrfToken generation after form based auth
+                .addFilterAfter(new CsrfHeaderFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
