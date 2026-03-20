@@ -1,4 +1,4 @@
-package com.eimc.login.controller;
+package com.eimc.view;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- *      LoginController handles web requests
+ *      TemplateController handles web requests
  *      and returns a View (an HTML page).
  * */
 
 @Controller
 @RequestMapping("/")
-public class LoginController {
+public class TemplateController {
 
     @GetMapping("login")
     public String getLoginView() {
