@@ -1,23 +1,17 @@
 package com.eimc.security;
 
+import com.eimc.auth.ApplicationUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableWebSecurity
@@ -40,9 +34,11 @@ import java.util.concurrent.TimeUnit;
 public class SecurityConfig {
 
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationUserService applicationUserService;
 
-    public SecurityConfig(PasswordEncoder passwordEncoder) {
+    public SecurityConfig(PasswordEncoder passwordEncoder, ApplicationUserService applicationUserService) {
         this.passwordEncoder = passwordEncoder;
+        this.applicationUserService = applicationUserService;
     }
 
     /**
@@ -98,7 +94,7 @@ public class SecurityConfig {
                         ///  Form parameter
                         .rememberMeParameter("remember-me")
                         /// Look up the user account in memory once the cookie is validated
-                        .userDetailsService(userDetailsService()))
+                        .userDetailsService(applicationUserService))
 
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -115,41 +111,34 @@ public class SecurityConfig {
                 /// .addFilterAfter(new CsrfHeaderFilter(), BasicAuthenticationFilter.class);
 
                 /// Additional filter to trigger CsrfToken generation after form based auth
-                .addFilterAfter(new CsrfHeaderFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(new CsrfHeaderFilter(), UsernamePasswordAuthenticationFilter.class)
+
+                /// Explicitly register the custom DaoAuthenticationProvider for credential verification.
+                .authenticationProvider(daoAuthenticationProvider());
 
         return http.build();
     }
 
     /**
-     *      userDetailsService defines
-     *      custom in-memory administrative
-     *      and standard accounts authorized
-     *      to access the employee resources.
-     */
+     *      Configures the DaoAuthenticationProvider to use
+     *      custom user retrieval and password encoding logic.
+     *
+     *      This bean is required to bridge the custom
+     *      ApplicationUserService with Spring Security's
+     *      authentication manager.
+     *
+     *      It ensures that when a user logs in, their
+     *      credentials are fetched via the
+     *      ApplicationUserDaoService and verified
+     *      using the Bcrypt password encoder.
+     * */
 
     @Bean
-    public UserDetailsService userDetailsService(){
-
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder.encode("admin"))              ///  Password encoding
-                .authorities(UserRole.ADMIN.getGrantedAuthorities())                ///  ROLES + PERMISSIONS
-                .build();
-
-        UserDetails adminTrainee = User.builder()
-                .username("adminTrainee")
-                .password(passwordEncoder.encode("admin"))              ///  Password encoding
-                .authorities(UserRole.ADMIN_TRAINEE.getGrantedAuthorities())        ///  ROLES + PERMISSIONS
-                .build();
-
-        UserDetails user = User.builder()
-                .username("employee")
-                .password(passwordEncoder.encode("password123"))       ///  Password encoding
-                .authorities(UserRole.USER.getGrantedAuthorities())                ///  ROLES + PERMISSIONS
-                .build();
-
-        return new InMemoryUserDetailsManager(admin, adminTrainee ,user);
-
+    public DaoAuthenticationProvider daoAuthenticationProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setUserDetailsService(applicationUserService);
+        return provider;
     }
 
 }
