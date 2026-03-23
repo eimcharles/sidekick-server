@@ -1,22 +1,36 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <script src="https://cdn.tailwindcss.com"></script>
+            <title>Staff Portal Main Page</title>
+        </head>
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <title>Spring Boot Security Auth</title>
-    </head>
+        <body>
+            <div class="flex h-screen w-full">
 
-    <body>
+                <!--   Main page left side with portal button  -->
+                <div class="flex flex-1 items-center justify-center bg-white p-10">
+                    <div class="w-full max-w-sm">
+                        <h2 class="text-3xl font-bold mb-6 text-gray-900 text-left">Staff Portal</h2>
+                        <div class="space-y-4">
+                            <div class="text-gray-600 leading-relaxed">Access your staff portal below.</div>
+                            <a href="/login" class="flex w-full items-center justify-center bg-[#1D6160] text-white py-2 rounded font-bold hover:brightness-110 transition">
+                                Portal
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
-        <h1>Main Page</h1>
-        <p>This page is the main page for all users including: admins, admin trainees and employees, it is whitelisted.</p>
+                <!--   Main page right side image container   -->
+                <div class="hidden md:block md:w-1/2 lg:w-2/3">
+                    <img src="/images/login.jpg"
+                         th:src="@{/images/login.jpg}"
+                         class="h-full w-full object-cover"
+                         alt="Staff Portal Background">
+                </div>
 
-        <nav>
-            <p><a href="/login">Click here to Login</a></p>
-        </nav>
-
-    </body>
+            </div>
+        </body>
 </html>
