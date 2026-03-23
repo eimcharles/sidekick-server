@@ -1,3 +1,9 @@
 spring:
   application:
     name: spring-security-auth
+
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
