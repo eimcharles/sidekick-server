@@ -64,7 +64,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         /// Whitelist the root, index.html and Swagger docs
-                        .requestMatchers("/", "/index.html","/images/**",
+                        .requestMatchers("/", "/home/**","/images/**",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
                         /// Restricts management namespace to ADMIN and ADMIN_TRAINEE roles

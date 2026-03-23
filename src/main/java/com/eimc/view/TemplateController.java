@@ -11,20 +11,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * */
 
 @Controller
-@RequestMapping("/")
 public class TemplateController {
 
-    @GetMapping("login")
+    @GetMapping("/")
+    public String getHomeView() {
+        return "home/index";
+    }
+
+    @GetMapping("/login")
     public String getLoginView() {
         return "login/login";
     }
 
-    @GetMapping("logout")
+    @GetMapping("/logout")
     public String getLogoutView() {
         return "logout/logout";
     }
 
-    @GetMapping("dashboard")
+    @GetMapping("/dashboard")
     public String getDashboardView(HttpServletRequest request) {
 
         if (request.isUserInRole("ADMIN")) {
