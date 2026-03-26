@@ -33,7 +33,7 @@ public class EmployeeService {
 
     public Employee getEmployeeByEmployeeId(UUID employeeId){
         return employeeRepository.findByEmployeeId(employeeId)
-                .orElseThrow(() -> new NoSuchElementException("Employee not found"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("EmployeeId: %s not found", employeeId)));
     }
 
     public List<Employee> getEmployees(){
