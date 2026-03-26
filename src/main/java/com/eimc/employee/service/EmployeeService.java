@@ -20,7 +20,6 @@ public class EmployeeService {
     public Employee createEmployee(Employee employee) {
 
         Employee createdEmployee = new Employee(
-                UUID.randomUUID(),
                 employee.getEmployeePosition(),
                 employee.getFirstName(),
                 employee.getLastName(),
@@ -28,20 +27,17 @@ public class EmployeeService {
                 employee.getPassword()
         );
 
-        employeeRepository.addEmployee(createdEmployee);
+        employeeRepository.save(createdEmployee);
         return createdEmployee;
     }
 
     public Employee getEmployeeByEmployeeId(UUID employeeId){
-        return employeeRepository.getEmployeeList()
-                .stream()
-                .filter(employee -> employee.getEmployeeId().equals(employeeId))
-                .findFirst()
+        return employeeRepository.findByEmployeeId(employeeId)
                 .orElseThrow(() -> new NoSuchElementException("Employee not found"));
     }
 
     public List<Employee> getEmployees(){
-        return employeeRepository.getEmployeeList();
+        return employeeRepository.findAll();
     }
 
 }
