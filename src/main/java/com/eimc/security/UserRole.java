@@ -57,4 +57,23 @@ public enum UserRole {
         return authorities;
     }
 
+    /**
+     *      getAuthoritiesAsStrings flattens the
+     *      set of SimpleGrantedAuthority objects
+     *      into their String representations
+     *      for database persistence.
+     *
+     *      This allows the application to store
+     *      security roles and permissions
+     *      within the user_authorities table.
+     *
+     *      Set<SimpleGrantedAuthority> -> Set<String> -> MySQL
+     * */
+
+    public Set<String> getAuthoritiesAsStrings() {
+        return getGrantedAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
+    }
+
 }
