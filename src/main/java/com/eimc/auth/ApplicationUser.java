@@ -58,6 +58,18 @@ public class ApplicationUser implements UserDetails {
         this.isEnabled = isEnabled;
     }
 
+    /**
+     *      getAuthorities transforms the persisted
+     *      set of authority strings into a collection
+     *      of SimpleGrantedAuthority objects.
+     *
+     *      It re-assembles the database strings
+     *      into the security objects required
+     *      by Spring Security for authorization.
+     *
+     *      MySQL -> Set<String> -> Set<SimpleGrantedAuthority>
+     * */
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return grantedAuthorities.stream()
