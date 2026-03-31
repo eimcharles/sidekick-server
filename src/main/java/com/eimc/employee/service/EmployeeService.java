@@ -23,8 +23,7 @@ public class EmployeeService {
                 employee.getEmployeePosition(),
                 employee.getFirstName(),
                 employee.getLastName(),
-                employee.getEmail(),
-                employee.getPassword()
+                employee.getEmail()
         );
 
         employeeRepository.save(createdEmployee);

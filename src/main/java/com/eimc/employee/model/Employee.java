@@ -28,9 +28,6 @@ public class Employee {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
-
     public Employee() {}
 
     public Employee(Long id,
@@ -38,27 +35,23 @@ public class Employee {
                     String employeePosition,
                     String firstName,
                     String lastName,
-                    String email,
-                    String password) {
+                    String email) {
         this.id = id;
         this.employeeId = employeeId;
         this.employeePosition = employeePosition;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
     }
 
     public Employee(String employeePosition,
                     String firstName,
                     String lastName,
-                    String email,
-                    String password) {
+                    String email) {
         this.employeePosition = employeePosition;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
     }
 
     @PrePersist
@@ -92,10 +85,6 @@ public class Employee {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -120,10 +109,6 @@ public class Employee {
         this.email = email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -133,13 +118,12 @@ public class Employee {
                 Objects.equals(employeePosition, employee.employeePosition) &&
                 Objects.equals(firstName, employee.firstName) &&
                 Objects.equals(lastName, employee.lastName) &&
-                Objects.equals(email, employee.email) &&
-                Objects.equals(password, employee.password);
+                Objects.equals(email, employee.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, employeeId, employeePosition, firstName, lastName, email, password);
+        return Objects.hash(id, employeeId, employeePosition, firstName, lastName, email);
     }
 
 }
