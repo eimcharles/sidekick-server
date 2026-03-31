@@ -1,5 +1,6 @@
 package com.eimc.employee.model;
 
+import com.eimc.auth.ApplicationUser;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -12,6 +13,9 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
+    private ApplicationUser applicationUser;
 
     @Column(nullable = false, unique = true)
     private UUID employeeId;
@@ -65,6 +69,10 @@ public class Employee {
         return id;
     }
 
+    public ApplicationUser getApplicationUser() {
+        return applicationUser;
+    }
+
     public UUID getEmployeeId() {
         return employeeId;
     }
@@ -89,7 +97,20 @@ public class Employee {
         this.id = id;
     }
 
-    public void setEmployeeId(UUID employeeId) {
+    /**
+     *      Synchronizes the bidirectional
+     *      relationship between Employee
+     *      and ApplicationUser by linking
+     *      them in memory.
+     * */
+
+    public void setApplicationUser(ApplicationUser user) {
+        this.applicationUser = user;
+        if (user != null && user.getEmployee() != this) {
+            user.setEmployee(this);
+        }
+    }
+        public void setEmployeeId(UUID employeeId) {
         this.employeeId = employeeId;
     }
 
@@ -113,17 +134,12 @@ public class Employee {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return Objects.equals(id, employee.id) &&
-                Objects.equals(employeeId, employee.employeeId) &&
-                Objects.equals(employeePosition, employee.employeePosition) &&
-                Objects.equals(firstName, employee.firstName) &&
-                Objects.equals(lastName, employee.lastName) &&
-                Objects.equals(email, employee.email);
+        return Objects.equals(employeeId, employee.employeeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, employeeId, employeePosition, firstName, lastName, email);
+        return Objects.hash(employeeId);
     }
 
 }

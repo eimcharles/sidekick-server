@@ -1,11 +1,13 @@
 package com.eimc.auth;
 
+import com.eimc.employee.model.Employee;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,8 +23,12 @@ import java.util.stream.Collectors;
 public class ApplicationUser implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private Employee employee;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -42,13 +48,15 @@ public class ApplicationUser implements UserDetails {
 
     public ApplicationUser() {}
 
-    public ApplicationUser(String username,
+    public ApplicationUser(Employee employee,
+                           String username,
                            String password,
                            Set<String> grantedAuthorities,
                            boolean isAccountNonExpired,
                            boolean isAccountNonLocked,
                            boolean isCredentialsNonExpired,
                            boolean isEnabled) {
+        this.employee = employee;
         this.username = username;
         this.password = password;
         this.grantedAuthorities = grantedAuthorities;
@@ -56,6 +64,19 @@ public class ApplicationUser implements UserDetails {
         this.isAccountNonLocked = isAccountNonLocked;
         this.isCredentialsNonExpired = isCredentialsNonExpired;
         this.isEnabled = isEnabled;
+    }
+
+    public ApplicationUser(Employee employee,
+                           String password,
+                           Set<String> grantedAuthorities) {
+        this.employee = employee;
+        this.username = employee.getEmail();
+        this.password = password;
+        this.grantedAuthorities = grantedAuthorities;
+        this.isAccountNonExpired = true;
+        this.isAccountNonLocked = true;
+        this.isCredentialsNonExpired = true;
+        this.isEnabled = true;
     }
 
     /**
@@ -81,6 +102,10 @@ public class ApplicationUser implements UserDetails {
         this.id = id;
     }
 
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -91,6 +116,10 @@ public class ApplicationUser implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public Employee getEmployee() {
+        return employee;
     }
 
     @Override
@@ -123,4 +152,15 @@ public class ApplicationUser implements UserDetails {
         return isEnabled;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ApplicationUser that = (ApplicationUser) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
