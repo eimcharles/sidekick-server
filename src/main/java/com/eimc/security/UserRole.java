@@ -58,7 +58,7 @@ public enum UserRole {
     }
 
     /**
-     *      getAuthoritiesAsStrings flattens the
+     *      getGrantedAuthoritiesAsStrings flattens the
      *      set of SimpleGrantedAuthority objects
      *      into their String representations
      *      for database persistence.
@@ -70,7 +70,7 @@ public enum UserRole {
      *      Set<SimpleGrantedAuthority> -> Set<String> -> MySQL
      * */
 
-    public Set<String> getAuthoritiesAsStrings() {
+    public Set<String> getGrantedAuthoritiesAsStrings() {
         return getGrantedAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());

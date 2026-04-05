@@ -3,13 +3,13 @@ package com.eimc.employee.service;
 import com.eimc.auth.ApplicationUser;
 import com.eimc.employee.model.Employee;
 import com.eimc.employee.repository.EmployeeRepository;
+import com.eimc.security.UserRole;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -24,24 +24,15 @@ public class EmployeeService {
     }
 
     @Transactional
-    public Employee createEmployee(Employee employee, String password, Set<String> grantedAuthorities) {
+    public Employee createEmployee(Employee employee, String rawPassword, UserRole role) {
 
-        Employee createdEmployee = new Employee(
-                employee.getEmployeePosition(),
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getEmail()
+        ApplicationUser createdAccount = new ApplicationUser(employee,
+                passwordEncoder.encode(rawPassword),
+                role.getGrantedAuthoritiesAsStrings()
         );
 
-        ApplicationUser createdAccount = new ApplicationUser(
-                createdEmployee,
-                passwordEncoder.encode(password),
-                grantedAuthorities
-        );
-
-        createdEmployee.setApplicationUser(createdAccount);
-        employeeRepository.save(createdEmployee);
-        return createdEmployee;
+        employee.setApplicationUser(createdAccount);
+        return employeeRepository.save(employee);
     }
 
     public Employee getEmployeeByEmployeeId(UUID employeeId){

@@ -1,5 +1,7 @@
 package com.eimc.employee.controller;
 
+import com.eimc.employee.dto.EmployeeRegistrationDTO;
+import com.eimc.employee.dto.EmployeeResponseDTO;
 import com.eimc.employee.model.Employee;
 import com.eimc.employee.service.EmployeeService;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  *      EmployeeManagementController provides administrative
@@ -26,23 +29,37 @@ public class EmployeeManagementController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('employee:write')")
-    public ResponseEntity<?> createEmployee(@RequestBody Employee employee){
-        Employee createdEmployee = employeeService.createEmployee(employee);
-        return ResponseEntity.ok(createdEmployee);
+    public ResponseEntity<EmployeeResponseDTO> createEmployee(@RequestBody EmployeeRegistrationDTO request){
+
+        Employee newEmployee = new Employee(
+                request.employeePosition(),
+                request.firstName(),
+                request.lastName(),
+                request.email());
+
+        Employee createdEmployee = employeeService
+                .createEmployee(newEmployee, request.password(), request.role());
+
+        return ResponseEntity.ok(EmployeeResponseDTO.mapToResponse(createdEmployee));
     }
 
     @GetMapping("/{employeeId}")
     @PreAuthorize("hasAuthority('employee:read')")
-    public ResponseEntity<?> getEmployeeByEmployeeId(@PathVariable UUID employeeId){
+    public ResponseEntity<EmployeeResponseDTO> getEmployeeByEmployeeId(@PathVariable UUID employeeId){
         Employee employee = employeeService.getEmployeeByEmployeeId(employeeId);
-        return ResponseEntity.ok(employee);
+        return ResponseEntity.ok(EmployeeResponseDTO.mapToResponse(employee));
     }
 
     @GetMapping
     @PreAuthorize("hasAuthority('employee:read')")
-    public ResponseEntity<?> getEmployees(){
+    public ResponseEntity<List<EmployeeResponseDTO>> getEmployees(){
         List<Employee> employees = employeeService.getEmployees();
-        return ResponseEntity.ok(employees);
+        List<EmployeeResponseDTO> response = employees
+                .stream()
+                .map(EmployeeResponseDTO::mapToResponse)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
     }
 
 }
