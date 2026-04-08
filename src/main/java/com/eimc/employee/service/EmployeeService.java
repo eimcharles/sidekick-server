@@ -44,6 +44,11 @@ public class EmployeeService {
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("EmployeeId %s not found", employeeId)));
     }
 
+    public Employee getEmployeeByEmail(String email) {
+        return employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Employee with %s not found", email)));
+    }
+
     public List<Employee> getEmployees(){
         return employeeRepository.findAll();
     }
