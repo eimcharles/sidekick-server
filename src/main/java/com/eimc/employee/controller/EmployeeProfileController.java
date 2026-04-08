@@ -1,6 +1,6 @@
 package com.eimc.employee.controller;
 
-import com.eimc.employee.dto.EmployeeResponseDTO;
+import com.eimc.employee.dto.EmployeeProfileDTO;
 import com.eimc.employee.model.Employee;
 import com.eimc.employee.service.EmployeeService;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +23,10 @@ public class EmployeeProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<EmployeeResponseDTO> getEmployeeProfile(Authentication authentication){
+    public ResponseEntity<EmployeeProfileDTO> getEmployeeProfile(Authentication authentication){
         String employeeUsername = authentication.getName();
         Employee employee = employeeService.getEmployeeByEmail(employeeUsername);
-        return ResponseEntity.ok(EmployeeResponseDTO.mapToResponse(employee));
+        return ResponseEntity.ok(EmployeeProfileDTO.mapToResponse(employee));
     }
 
 }
