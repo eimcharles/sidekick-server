@@ -1,6 +1,10 @@
-package com.eimc.common.exception;
+package com.eimc.common.exception.handler;
 
 import com.eimc.common.domain.HttpResponse;
+import com.eimc.common.exception.BadCredentialsException;
+import com.eimc.common.exception.DuplicateResourceException;
+import com.eimc.common.exception.PasswordMismatchException;
+import com.eimc.common.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
