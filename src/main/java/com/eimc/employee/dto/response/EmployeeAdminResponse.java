@@ -8,7 +8,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 
-public record RegistrationResponse(
+public record EmployeeAdminResponse(
 
         UUID employeeId,
         String employeePosition,
@@ -20,9 +20,9 @@ public record RegistrationResponse(
 
 ) {
 
-    public static RegistrationResponse mapToResponse(Employee createdEmployee) {
+    public static EmployeeAdminResponse mapToResponse(Employee createdEmployee) {
 
-        return new RegistrationResponse(createdEmployee.getEmployeeId(),
+        return new EmployeeAdminResponse(createdEmployee.getEmployeeId(),
                 createdEmployee.getEmployeePosition(),
                 createdEmployee.getFirstName(),
                 createdEmployee.getLastName(),
