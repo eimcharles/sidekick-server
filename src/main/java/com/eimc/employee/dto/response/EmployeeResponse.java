@@ -4,7 +4,7 @@ import com.eimc.employee.model.Employee;
 
 import java.util.UUID;
 
-public record ProfileResponse(
+public record EmployeeResponse(
 
         UUID employeeId,
         String employeePosition,
@@ -15,8 +15,8 @@ public record ProfileResponse(
 
 ) {
 
-    public static ProfileResponse mapToResponse(Employee employee) {
-        return new ProfileResponse(
+    public static EmployeeResponse mapToResponse(Employee employee) {
+        return new EmployeeResponse(
                 employee.getEmployeeId(),
                 employee.getEmployeePosition(),
                 employee.getFirstName(),

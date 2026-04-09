@@ -1,7 +1,7 @@
 package com.eimc.employee.controller;
 
 import com.eimc.employee.dto.request.PasswordUpdateRequest;
-import com.eimc.employee.dto.response.ProfileResponse;
+import com.eimc.employee.dto.response.EmployeeResponse;
 import com.eimc.employee.model.Employee;
 import com.eimc.employee.service.EmployeeService;
 import org.springframework.http.ResponseEntity;
@@ -24,21 +24,24 @@ public class EmployeeProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<ProfileResponse> getEmployeeProfile(Authentication authentication){
+    public ResponseEntity<EmployeeResponse> getEmployeeProfile(Authentication authentication){
+
         String employeeUsername = authentication.getName();
         Employee employee = employeeService.getEmployeeByEmail(employeeUsername);
-        return ResponseEntity.ok(ProfileResponse.mapToResponse(employee));
+
+        return ResponseEntity.ok(EmployeeResponse.mapToResponse(employee));
     }
 
     @PatchMapping
-    public ResponseEntity<ProfileResponse> updatePassword(
+    public ResponseEntity<EmployeeResponse> updatePassword(
             Authentication authentication,
             @RequestBody PasswordUpdateRequest request){
 
         String employeeUsername = authentication.getName();
         Employee employee = employeeService.updatePassword(employeeUsername,
                 request.oldPassword(), request.newPassword(), request.newPasswordConfirmed());
-        return ResponseEntity.ok(ProfileResponse.mapToResponse(employee));
+
+        return ResponseEntity.ok(EmployeeResponse.mapToResponse(employee));
     }
 
 }
