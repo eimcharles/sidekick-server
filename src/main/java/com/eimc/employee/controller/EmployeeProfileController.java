@@ -1,5 +1,6 @@
 package com.eimc.employee.controller;
 
+import com.eimc.employee.dto.EmployeePasswordUpdateDTO;
 import com.eimc.employee.dto.EmployeeProfileDTO;
 import com.eimc.employee.model.Employee;
 import com.eimc.employee.service.EmployeeService;
@@ -26,6 +27,17 @@ public class EmployeeProfileController {
     public ResponseEntity<EmployeeProfileDTO> getEmployeeProfile(Authentication authentication){
         String employeeUsername = authentication.getName();
         Employee employee = employeeService.getEmployeeByEmail(employeeUsername);
+        return ResponseEntity.ok(EmployeeProfileDTO.mapToResponse(employee));
+    }
+
+    @PatchMapping
+    public ResponseEntity<EmployeeProfileDTO> updatePassword(
+            Authentication authentication,
+            @RequestBody EmployeePasswordUpdateDTO request){
+
+        String employeeUsername = authentication.getName();
+        Employee employee = employeeService.updatePassword(employeeUsername,
+                request.oldPassword(), request.newPassword(), request.newPasswordConfirmed());
         return ResponseEntity.ok(EmployeeProfileDTO.mapToResponse(employee));
     }
 

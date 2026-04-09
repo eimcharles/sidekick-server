@@ -1,7 +1,9 @@
 package com.eimc.employee.service;
 
 import com.eimc.auth.ApplicationUser;
+import com.eimc.common.exception.BadCredentialsException;
 import com.eimc.common.exception.DuplicateResourceException;
+import com.eimc.common.exception.PasswordMismatchException;
 import com.eimc.common.exception.ResourceNotFoundException;
 import com.eimc.employee.model.Employee;
 import com.eimc.employee.repository.EmployeeRepository;
@@ -47,6 +49,24 @@ public class EmployeeService {
     public Employee getEmployeeByEmail(String email) {
         return employeeRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Employee with %s not found", email)));
+    }
+
+    @Transactional
+    public Employee updatePassword(String email, String oldPassword, String newPassword, String newPasswordConfirmed){
+
+        if (!newPassword.equals(newPasswordConfirmed)){
+            throw new PasswordMismatchException("New password and confirmation password do not match");
+        }
+
+        Employee employee = getEmployeeByEmail(email);
+        ApplicationUser userAccount = employee.getApplicationUser();
+
+        if (!passwordEncoder.matches(oldPassword, userAccount.getPassword())){
+            throw new BadCredentialsException("The current password is incorrect");
+        }
+
+        userAccount.setPassword(passwordEncoder.encode(newPassword));
+        return employeeRepository.save(employee);
     }
 
     public List<Employee> getEmployees(){
