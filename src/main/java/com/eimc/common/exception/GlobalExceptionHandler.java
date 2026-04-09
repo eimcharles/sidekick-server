@@ -49,4 +49,40 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<HttpResponse> handlePasswordMismatchException(
+            PasswordMismatchException passwordMismatchException,
+            HttpServletRequest request){
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                HttpResponse.builder()
+                        .timeStamp(Instant.now())
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .status(HttpStatus.BAD_REQUEST)
+                        .errorCode("PASSWORD_MISMATCH")
+                        .message(passwordMismatchException.getMessage())
+                        .path(request.getRequestURI())
+                        .requestMethod(request.getMethod())
+                        .build());
+
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<HttpResponse> handleBadCredentialsException(
+            BadCredentialsException badCredentialsException,
+            HttpServletRequest request){
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                HttpResponse.builder()
+                        .timeStamp(Instant.now())
+                        .statusCode(HttpStatus.UNAUTHORIZED.value())
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .errorCode("BAD_PASSWORD_CREDENTIALS")
+                        .message(badCredentialsException.getMessage())
+                        .path(request.getRequestURI())
+                        .requestMethod(request.getMethod())
+                        .build());
+
+    }
+
 }
