@@ -1,7 +1,7 @@
 package com.eimc.employee.controller;
 
-import com.eimc.employee.dto.EmployeePasswordUpdateDTO;
-import com.eimc.employee.dto.EmployeeProfileDTO;
+import com.eimc.employee.dto.request.PasswordUpdateRequest;
+import com.eimc.employee.dto.response.ProfileResponse;
 import com.eimc.employee.model.Employee;
 import com.eimc.employee.service.EmployeeService;
 import org.springframework.http.ResponseEntity;
@@ -24,21 +24,21 @@ public class EmployeeProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<EmployeeProfileDTO> getEmployeeProfile(Authentication authentication){
+    public ResponseEntity<ProfileResponse> getEmployeeProfile(Authentication authentication){
         String employeeUsername = authentication.getName();
         Employee employee = employeeService.getEmployeeByEmail(employeeUsername);
-        return ResponseEntity.ok(EmployeeProfileDTO.mapToResponse(employee));
+        return ResponseEntity.ok(ProfileResponse.mapToResponse(employee));
     }
 
     @PatchMapping
-    public ResponseEntity<EmployeeProfileDTO> updatePassword(
+    public ResponseEntity<ProfileResponse> updatePassword(
             Authentication authentication,
-            @RequestBody EmployeePasswordUpdateDTO request){
+            @RequestBody PasswordUpdateRequest request){
 
         String employeeUsername = authentication.getName();
         Employee employee = employeeService.updatePassword(employeeUsername,
                 request.oldPassword(), request.newPassword(), request.newPasswordConfirmed());
-        return ResponseEntity.ok(EmployeeProfileDTO.mapToResponse(employee));
+        return ResponseEntity.ok(ProfileResponse.mapToResponse(employee));
     }
 
 }

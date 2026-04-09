@@ -1,10 +1,10 @@
-package com.eimc.employee.dto;
+package com.eimc.employee.dto.response;
 
 import com.eimc.employee.model.Employee;
 
 import java.util.UUID;
 
-public record EmployeeProfileDTO(
+public record ProfileResponse(
 
         UUID employeeId,
         String employeePosition,
@@ -15,8 +15,8 @@ public record EmployeeProfileDTO(
 
 ) {
 
-    public static EmployeeProfileDTO mapToResponse(Employee employee) {
-        return new EmployeeProfileDTO(
+    public static ProfileResponse mapToResponse(Employee employee) {
+        return new ProfileResponse(
                 employee.getEmployeeId(),
                 employee.getEmployeePosition(),
                 employee.getFirstName(),

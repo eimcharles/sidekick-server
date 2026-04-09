@@ -1,9 +1,8 @@
-package com.eimc.employee.dto;
+package com.eimc.employee.dto.request;
 
 import com.eimc.security.UserRole;
 
-
-public record EmployeeRegistrationDTO(
+public record RegistrationRequest(
 
         String employeePosition,
         String firstName,

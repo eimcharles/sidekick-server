@@ -1,4 +1,4 @@
-package com.eimc.employee.dto;
+package com.eimc.employee.dto.response;
 
 import com.eimc.employee.model.Employee;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,7 +8,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 
-public record EmployeeResponseDTO (
+public record RegistrationResponse(
 
         UUID employeeId,
         String employeePosition,
@@ -20,9 +20,9 @@ public record EmployeeResponseDTO (
 
 ) {
 
-    public static EmployeeResponseDTO mapToResponse(Employee createdEmployee) {
+    public static RegistrationResponse mapToResponse(Employee createdEmployee) {
 
-        return new EmployeeResponseDTO(createdEmployee.getEmployeeId(),
+        return new RegistrationResponse(createdEmployee.getEmployeeId(),
                 createdEmployee.getEmployeePosition(),
                 createdEmployee.getFirstName(),
                 createdEmployee.getLastName(),

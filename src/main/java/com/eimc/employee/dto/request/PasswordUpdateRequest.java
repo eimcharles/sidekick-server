@@ -1,6 +1,6 @@
-package com.eimc.employee.dto;
+package com.eimc.employee.dto.request;
 
-public record EmployeePasswordUpdateDTO (
+public record PasswordUpdateRequest(
 
         String oldPassword,
         String newPassword,
