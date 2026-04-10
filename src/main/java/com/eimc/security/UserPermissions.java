@@ -13,7 +13,9 @@ package com.eimc.security;
 public enum UserPermissions {
 
     EMPLOYEE_READ("employee:read"),
-    EMPLOYEE_WRITE("employee:write");
+    EMPLOYEE_WRITE("employee:write"),
+    EMPLOYEE_UPDATE("employee:update"),
+    EMPLOYEE_DELETE("employee:delete");
 
     private final String permission;
 
