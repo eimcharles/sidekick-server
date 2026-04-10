@@ -24,9 +24,9 @@ import static com.eimc.security.UserPermissions.*;
 
 public enum UserRole {
 
-    ADMIN(Sets.newHashSet(EMPLOYEE_READ, EMPLOYEE_WRITE)),
-    ADMIN_TRAINEE(Sets.newHashSet(EMPLOYEE_READ)),
-    USER(Sets.newHashSet(EMPLOYEE_READ));
+    ADMIN(Sets.newHashSet(EMPLOYEE_READ, EMPLOYEE_WRITE, EMPLOYEE_UPDATE, EMPLOYEE_DELETE)),
+    ADMIN_TRAINEE(Sets.newHashSet(EMPLOYEE_READ, EMPLOYEE_UPDATE)),
+    USER(Sets.newHashSet());
 
     private final Set<UserPermissions> userPermissions;
 
