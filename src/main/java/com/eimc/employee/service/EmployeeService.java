@@ -75,6 +75,33 @@ public class EmployeeService {
         employeeRepository.save(employee);
     }
 
+    @Transactional
+    public Employee updateEmployee(UUID employeeId,
+                                   String employeePosition,
+                                   String firstName,
+                                   String lastName) {
+
+        Employee employeeToUpdate = employeeRepository.findByEmployeeId(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("EmployeeId %s not found", employeeId)));
+
+        if (employeePosition != null && !employeePosition.isBlank()
+                && !employeePosition.equals(employeeToUpdate.getEmployeePosition())) {
+            employeeToUpdate.setEmployeePosition(employeePosition);
+        }
+
+        if (firstName != null && !firstName.isBlank()
+                && !firstName.equals(employeeToUpdate.getFirstName())) {
+            employeeToUpdate.setFirstName(firstName);
+        }
+
+        if (lastName != null && !lastName.isBlank()
+                && !lastName.equals(employeeToUpdate.getLastName())) {
+            employeeToUpdate.setLastName(lastName);
+        }
+
+        return employeeRepository.save(employeeToUpdate);
+    }
+
     public List<Employee> getEmployees(){
         return employeeRepository.findAll();
     }

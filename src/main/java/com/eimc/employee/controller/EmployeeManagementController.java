@@ -1,6 +1,7 @@
 package com.eimc.employee.controller;
 
 import com.eimc.employee.dto.request.EmployeeCreationRequest;
+import com.eimc.employee.dto.request.EmployeeUpdateRequest;
 import com.eimc.employee.dto.response.EmployeeAdminResponse;
 import com.eimc.employee.model.Employee;
 import com.eimc.employee.service.EmployeeService;
@@ -49,6 +50,18 @@ public class EmployeeManagementController {
 
         Employee employee = employeeService.getEmployeeByEmployeeId(employeeId);
         return ResponseEntity.ok(EmployeeAdminResponse.mapToResponse(employee));
+    }
+
+    @PatchMapping("/{employeeId}")
+    @PreAuthorize("hasAuthority('employee:update')")
+    public ResponseEntity<EmployeeAdminResponse> updateEmployee(
+            @PathVariable UUID employeeId,
+            @RequestBody EmployeeUpdateRequest request) {
+
+        Employee updatedEmployee = employeeService
+                .updateEmployee(employeeId, request.employeePosition(), request.firstName(), request.lastName());
+
+        return ResponseEntity.ok(EmployeeAdminResponse.mapToResponse(updatedEmployee));
     }
 
     @GetMapping
