@@ -1,13 +1,17 @@
 package com.eimc.employee.model;
 
 import com.eimc.auth.ApplicationUser;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLRestriction;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "employees")
+//@SQLRestriction("is_deleted = false")
 public class Employee {
 
     @Id
@@ -31,6 +35,12 @@ public class Employee {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
+    private Instant deletedAt;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
 
     public Employee() {}
 
@@ -93,6 +103,14 @@ public class Employee {
         return email;
     }
 
+    public Instant getDeletedAt() {
+        return deletedAt;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -110,7 +128,8 @@ public class Employee {
             user.setEmployee(this);
         }
     }
-        public void setEmployeeId(UUID employeeId) {
+
+    public void setEmployeeId(UUID employeeId) {
         this.employeeId = employeeId;
     }
 
@@ -128,6 +147,14 @@ public class Employee {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setDeletedAt(Instant deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public void setIsDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     @Override

@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -100,6 +101,19 @@ public class EmployeeService {
         }
 
         return employeeRepository.save(employeeToUpdate);
+    }
+
+    @Transactional
+    public void deleteByEmployeeId(UUID employeeId) {
+
+        Employee employeeToDelete = employeeRepository.findByEmployeeId(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("EmployeeId %s not found", employeeId)));
+
+        employeeToDelete.setIsDeleted(true);
+        employeeToDelete.setDeletedAt(Instant.now());
+        employeeToDelete.getApplicationUser().setIsEnabled(false);
+
+        employeeRepository.save(employeeToDelete);
     }
 
     public List<Employee> getEmployees(){

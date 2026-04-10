@@ -64,6 +64,14 @@ public class EmployeeManagementController {
         return ResponseEntity.ok(EmployeeAdminResponse.mapToResponse(updatedEmployee));
     }
 
+    @DeleteMapping("/{employeeId}")
+    @PreAuthorize("hasAuthority('employee:delete')")
+    public ResponseEntity<EmployeeAdminResponse> deleteEmployee(@PathVariable UUID employeeId){
+
+        employeeService.deleteByEmployeeId(employeeId);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping
     @PreAuthorize("hasAuthority('employee:read')")
     public ResponseEntity<List<EmployeeAdminResponse>> getEmployees(){

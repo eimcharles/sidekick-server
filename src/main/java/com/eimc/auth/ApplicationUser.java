@@ -122,6 +122,14 @@ public class ApplicationUser implements UserDetails {
         return employee;
     }
 
+    public boolean isDeleted(){
+        return this.employee.isDeleted();
+    }
+
+    public void setIsEnabled(boolean enabled) {
+        this.isEnabled = enabled;
+    }
+
     @Override
     public String getPassword() {
         return password;
@@ -149,7 +157,7 @@ public class ApplicationUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isEnabled;
+        return isEnabled && !isDeleted();
     }
 
     @Override
