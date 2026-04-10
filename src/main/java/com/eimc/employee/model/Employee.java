@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "employees")
-//@SQLRestriction("is_deleted = false")
+@SQLRestriction("is_deleted = false")
 public class Employee {
 
     @Id
