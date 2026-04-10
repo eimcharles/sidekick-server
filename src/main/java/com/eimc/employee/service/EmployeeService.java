@@ -21,13 +21,16 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
+    public EmployeeService(EmployeeRepository employeeRepository,
+                           PasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
-    public Employee createEmployee(Employee employee, String rawPassword, UserRole role) {
+    public Employee createEmployee(Employee employee,
+                                   String rawPassword,
+                                   UserRole role) {
 
         if (employeeRepository.existsByEmail(employee.getEmail()))
             throw new DuplicateResourceException(String.format("Employee with email %s already exists", employee.getEmail()));
@@ -52,7 +55,10 @@ public class EmployeeService {
     }
 
     @Transactional
-    public Employee updatePassword(String email, String oldPassword, String newPassword, String newPasswordConfirmed){
+    public void updatePassword(String email,
+                               String oldPassword,
+                               String newPassword,
+                               String newPasswordConfirmed){
 
         if (!newPassword.equals(newPasswordConfirmed)){
             throw new PasswordMismatchException("New password and confirmation password do not match");
@@ -66,7 +72,7 @@ public class EmployeeService {
         }
 
         userAccount.setPassword(passwordEncoder.encode(newPassword));
-        return employeeRepository.save(employee);
+        employeeRepository.save(employee);
     }
 
     public List<Employee> getEmployees(){

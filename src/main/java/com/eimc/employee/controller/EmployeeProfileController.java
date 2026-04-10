@@ -38,10 +38,10 @@ public class EmployeeProfileController {
             @RequestBody PasswordUpdateRequest request){
 
         String employeeUsername = authentication.getName();
-        Employee employee = employeeService.updatePassword(employeeUsername,
+        employeeService.updatePassword(employeeUsername,
                 request.oldPassword(), request.newPassword(), request.newPasswordConfirmed());
 
-        return ResponseEntity.ok(EmployeeResponse.mapToResponse(employee));
+        return ResponseEntity.noContent().build();
     }
 
 }
