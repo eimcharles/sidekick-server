@@ -31,28 +31,29 @@ public class EmployeeProfileController {
 
     @GetMapping
     public ResponseEntity<HttpResponse> getEmployeeProfile(
-            Authentication authentication,
-            HttpServletRequest request){
+            HttpServletRequest request,
+            Authentication authentication){
 
         String employeeUsername = authentication.getName();
         Employee employee = employeeService.getEmployeeByEmail(employeeUsername);
 
         return ResponseEntity.ok().body(HttpResponse.builder()
                         .timeStamp(Instant.now())
-                        .status(HttpStatus.OK)
                         .statusCode(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
+                        .message("Profile successfully retrieved")
                         .path(request.getRequestURI())
                         .requestMethod(request.getMethod())
-                        .message("Profile retrieved successfully")
                         .data(Map.of("Employee", EmployeeResponse.mapToResponse(employee)))
                         .build());
+
     }
 
     @PatchMapping("/update-password")
     public ResponseEntity<HttpResponse> updatePassword(
-            Authentication authentication,
+            @RequestBody PasswordUpdateRequest passwordUpdateRequest,
             HttpServletRequest request,
-            @RequestBody PasswordUpdateRequest passwordUpdateRequest){
+            Authentication authentication){
 
         String employeeUsername = authentication.getName();
         employeeService.updatePassword(employeeUsername,
@@ -62,12 +63,13 @@ public class EmployeeProfileController {
 
         return ResponseEntity.ok().body(HttpResponse.builder()
                 .timeStamp(Instant.now())
-                .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Password successfully updated")
                 .path(request.getRequestURI())
                 .requestMethod(request.getMethod())
-                .message("Password updated successfully")
                 .build());
+
     }
 
 }
