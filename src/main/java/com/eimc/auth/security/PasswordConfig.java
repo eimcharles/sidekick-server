@@ -1,4 +1,4 @@
-package com.eimc.security;
+package com.eimc.auth.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

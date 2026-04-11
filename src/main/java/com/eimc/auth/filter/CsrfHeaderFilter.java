@@ -1,4 +1,4 @@
-package com.eimc.security;
+package com.eimc.auth.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
