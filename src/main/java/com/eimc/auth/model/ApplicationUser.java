@@ -1,4 +1,4 @@
-package com.eimc.auth;
+package com.eimc.auth.model;
 
 import com.eimc.employee.model.Employee;
 import jakarta.persistence.*;

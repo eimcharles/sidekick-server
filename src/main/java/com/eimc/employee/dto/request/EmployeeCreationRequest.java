@@ -1,6 +1,6 @@
 package com.eimc.employee.dto.request;
 
-import com.eimc.security.UserRole;
+import com.eimc.auth.model.UserRole;
 
 public record EmployeeCreationRequest(
 

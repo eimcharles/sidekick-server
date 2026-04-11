@@ -1,5 +1,6 @@
-package com.eimc.auth;
+package com.eimc.auth.repository;
 
+import com.eimc.auth.model.ApplicationUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

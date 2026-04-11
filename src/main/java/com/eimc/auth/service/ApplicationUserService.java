@@ -1,5 +1,6 @@
-package com.eimc.auth;
+package com.eimc.auth.service;
 
+import com.eimc.auth.repository.ApplicationUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,13 +1,13 @@
 package com.eimc.employee.service;
 
-import com.eimc.auth.ApplicationUser;
+import com.eimc.auth.model.ApplicationUser;
 import com.eimc.common.exception.BadCredentialsException;
 import com.eimc.common.exception.DuplicateResourceException;
 import com.eimc.common.exception.PasswordMismatchException;
 import com.eimc.common.exception.ResourceNotFoundException;
 import com.eimc.employee.model.Employee;
 import com.eimc.employee.repository.EmployeeRepository;
-import com.eimc.security.UserRole;
+import com.eimc.auth.model.UserRole;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

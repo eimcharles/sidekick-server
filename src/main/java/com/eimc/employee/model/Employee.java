@@ -1,6 +1,6 @@
 package com.eimc.employee.model;
 
-import com.eimc.auth.ApplicationUser;
+import com.eimc.auth.model.ApplicationUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import org.hibernate.annotations.SQLRestriction;

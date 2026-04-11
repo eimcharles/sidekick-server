@@ -1,4 +1,4 @@
-package com.eimc.security;
+package com.eimc.auth.model;
 
 import com.google.common.collect.Sets;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.eimc.security.UserPermissions.*;
+import static com.eimc.auth.model.UserPermissions.*;
 
 /**
  *      UserRole defines the application roles

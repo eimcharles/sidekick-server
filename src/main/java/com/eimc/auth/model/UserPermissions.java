@@ -1,4 +1,4 @@
-package com.eimc.security;
+package com.eimc.auth.model;
 
 /**
  *      UserPermissions defines permissions
