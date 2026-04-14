@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,17 +31,22 @@ public class AuthController {
 
     private final AuthenticationManager authManager;
     private final SecurityContextRepository securityContextRepository;
+    private final SecurityContextLogoutHandler logoutHandler;
     private final RememberMeServices rememberMeServices;
     private final EmployeeService employeeService;
 
     public AuthController(AuthenticationManager authManager,
                           SecurityContextRepository securityContextRepository,
+                          SecurityContextLogoutHandler logoutHandler,
                           RememberMeServices rememberMeServices,
                           EmployeeService employeeService) {
+
         this.authManager = authManager;
         this.securityContextRepository = securityContextRepository;
+        this.logoutHandler = logoutHandler;
         this.rememberMeServices = rememberMeServices;
         this.employeeService = employeeService;
+
     }
 
     @PostMapping("/login")
@@ -81,6 +87,28 @@ public class AuthController {
                 .path(request.getRequestURI())
                 .requestMethod(request.getMethod())
                 .data(Map.of("Employee", EmployeeResponse.mapToResponse(employee)))
+                .build());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<HttpResponse> logout(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication) {
+
+        ///  Clear the SecurityContextHolder and invalidate the JSESSIONID
+        logoutHandler.logout(request, response, authentication);
+
+        /// Remove the rememberMe cookie upon logout
+        rememberMeServices.loginFail(request, response);
+
+        return ResponseEntity.ok().body(HttpResponse.builder()
+                .timeStamp(Instant.now())
+                .statusCode(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Successfully logged out")
+                .path(request.getRequestURI())
+                .requestMethod(request.getMethod())
                 .build());
     }
 
