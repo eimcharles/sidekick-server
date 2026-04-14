@@ -22,17 +22,10 @@ public class AuthConfig {
     }
 
     /**
-     *      Configures the DaoAuthenticationProvider to use
-     *      custom user retrieval and password encoding logic.
-     *
-     *      This bean is required to bridge the custom
-     *      ApplicationUserService with Spring Security's
-     *      authentication manager.
-     *
-     *      It ensures that when a user logs in, their
-     *      credentials are fetched via the
-     *      ApplicationUserDaoService and verified
-     *      using the Bcrypt password encoder.
+     *      daoAuthenticationProvider
+     *      uses a database for user
+     *      retrieval and password verification
+     *      for user authentication.
      * */
 
     @Bean
@@ -47,7 +40,9 @@ public class AuthConfig {
      *      authenticationManager
      *      exposes the interface
      *      that validates user
-     *      credentials.
+     *      credentials using
+     *      the data retrieved by the
+     *      DaoAuthenticationProvider.
      * */
 
     @Bean
@@ -57,9 +52,10 @@ public class AuthConfig {
 
     /**
      *      securityContextRepository
-     *      manages the storage
+     *      manages the persistence
      *      of authenticated users
-     *      within the session.
+     *      identity and roles
+     *      using HTTP sessions.
      * */
 
     @Bean
