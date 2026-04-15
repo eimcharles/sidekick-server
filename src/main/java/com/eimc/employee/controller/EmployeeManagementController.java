@@ -135,20 +135,40 @@ public class EmployeeManagementController {
 
     }
 
-    @GetMapping
+    @GetMapping("/active")
     @PreAuthorize("hasAuthority('employee:read')")
-    public ResponseEntity<HttpResponse> getEmployees(HttpServletRequest request){
+    public ResponseEntity<HttpResponse> getActiveEmployees(HttpServletRequest request){
 
-        List<Employee> employees = employeeManagementService.getEmployees();
+        List<Employee> employees = employeeManagementService.getActiveEmployees();
 
         return ResponseEntity.ok().body(HttpResponse.builder()
                 .timeStamp(Instant.now())
                 .statusCode(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
-                .message("Employees successfully retrieved")
+                .message("Active employees successfully retrieved")
                 .path(request.getRequestURI())
                 .requestMethod(request.getMethod())
-                .data(Map.of("Employees", employees.stream()
+                .data(Map.of("Active employees", employees.stream()
+                        .map(EmployeeAdminResponse::mapToResponse)
+                        .toList()))
+                .build());
+
+    }
+
+    @GetMapping("/inactive")
+    @PreAuthorize("hasAuthority('employee:read')")
+    public ResponseEntity<HttpResponse> getInactiveEmployees(HttpServletRequest request){
+
+        List<Employee> employees = employeeManagementService.getInactiveEmployees();
+
+        return ResponseEntity.ok().body(HttpResponse.builder()
+                .timeStamp(Instant.now())
+                .statusCode(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Inactive employees successfully retrieved")
+                .path(request.getRequestURI())
+                .requestMethod(request.getMethod())
+                .data(Map.of("Inactive employees", employees.stream()
                         .map(EmployeeAdminResponse::mapToResponse)
                         .toList()))
                 .build());

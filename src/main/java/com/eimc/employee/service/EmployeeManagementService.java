@@ -93,8 +93,12 @@ public class EmployeeManagementService {
         employeeRepository.save(employeeToDelete);
     }
 
-    public List<Employee> getEmployees(){
-        return employeeRepository.findAll();
+    public List<Employee> getActiveEmployees(){
+        return employeeRepository.findAllByIsDeletedFalse();
+    }
+
+    public List<Employee> getInactiveEmployees(){
+        return employeeRepository.findAllByIsDeletedTrue();
     }
 
 }

@@ -3,7 +3,6 @@ package com.eimc.employee.model;
 import com.eimc.auth.model.ApplicationUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -11,7 +10,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "employees")
-@SQLRestriction("is_deleted = false")
 public class Employee {
 
     @Id
