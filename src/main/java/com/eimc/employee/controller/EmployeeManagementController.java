@@ -5,7 +5,7 @@ import com.eimc.employee.dto.request.EmployeeCreationRequest;
 import com.eimc.employee.dto.request.EmployeeUpdateRequest;
 import com.eimc.employee.dto.response.EmployeeAdminResponse;
 import com.eimc.employee.model.Employee;
-import com.eimc.employee.service.EmployeeService;
+import com.eimc.employee.service.EmployeeManagementService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +28,10 @@ import java.util.UUID;
 @RequestMapping("management/api/v1/employees")
 public class EmployeeManagementController {
 
-    private final EmployeeService employeeService;
+    private final EmployeeManagementService employeeManagementService;
 
-    public EmployeeManagementController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
+    public EmployeeManagementController(EmployeeManagementService employeeManagementService) {
+        this.employeeManagementService = employeeManagementService;
     }
 
     @PostMapping
@@ -46,7 +46,7 @@ public class EmployeeManagementController {
                 employeeCreationRequest.lastName(),
                 employeeCreationRequest.email());
 
-        Employee createdEmployee = employeeService
+        Employee createdEmployee = employeeManagementService
                 .createEmployee(newEmployee,
                         employeeCreationRequest.password(),
                         employeeCreationRequest.role());
@@ -77,7 +77,7 @@ public class EmployeeManagementController {
             @PathVariable UUID employeeId,
             HttpServletRequest request){
 
-        Employee employee = employeeService.getEmployeeByEmployeeId(employeeId);
+        Employee employee = employeeManagementService.getEmployeeByEmployeeId(employeeId);
         return ResponseEntity.ok().body(HttpResponse.builder()
                 .timeStamp(Instant.now())
                 .statusCode(HttpStatus.OK.value())
@@ -98,8 +98,8 @@ public class EmployeeManagementController {
             @RequestBody EmployeeUpdateRequest employeeUpdateRequest,
             HttpServletRequest request) {
 
-        Employee updatedEmployee = employeeService
-                .updateEmployee(employeeId,
+        Employee updatedEmployee = employeeManagementService
+                .updateEmployeeByEmployeeId(employeeId,
                         employeeUpdateRequest.employeePosition(),
                         employeeUpdateRequest.firstName(),
                         employeeUpdateRequest.lastName());
@@ -123,7 +123,7 @@ public class EmployeeManagementController {
             @PathVariable UUID employeeId,
             HttpServletRequest request){
 
-        employeeService.deleteByEmployeeId(employeeId);
+        employeeManagementService.deleteByEmployeeId(employeeId);
         return ResponseEntity.ok().body(HttpResponse.builder()
                 .timeStamp(Instant.now())
                 .statusCode(HttpStatus.OK.value())
@@ -139,7 +139,7 @@ public class EmployeeManagementController {
     @PreAuthorize("hasAuthority('employee:read')")
     public ResponseEntity<HttpResponse> getEmployees(HttpServletRequest request){
 
-        List<Employee> employees = employeeService.getEmployees();
+        List<Employee> employees = employeeManagementService.getEmployees();
 
         return ResponseEntity.ok().body(HttpResponse.builder()
                 .timeStamp(Instant.now())
