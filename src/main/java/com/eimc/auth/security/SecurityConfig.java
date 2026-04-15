@@ -5,14 +5,20 @@ import com.eimc.auth.filter.CsrfHeaderFilter;
 import com.eimc.auth.model.UserRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -34,13 +40,16 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 public class SecurityConfig {
 
-    private final ApplicationUserService applicationUserService;
     private final DaoAuthenticationProvider daoAuthenticationProvider;
+    private final CorsConfigurationSource corsConfigurationSource;
+    private final SecurityContextRepository securityContextRepository;
 
-    public SecurityConfig(ApplicationUserService applicationUserService,
-                          DaoAuthenticationProvider daoAuthenticationProvider) {
-        this.applicationUserService = applicationUserService;
+    public SecurityConfig(DaoAuthenticationProvider daoAuthenticationProvider,
+                          CorsConfigurationSource corsConfigurationSource,
+                          SecurityContextRepository securityContextRepository) { // Inject it here
         this.daoAuthenticationProvider = daoAuthenticationProvider;
+        this.corsConfigurationSource = corsConfigurationSource;
+        this.securityContextRepository = securityContextRepository;
     }
 
     /**
@@ -51,74 +60,67 @@ public class SecurityConfig {
      * */
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(
+            HttpSecurity http,
+            RememberMeServices rememberMeServices) throws Exception {
 
         http
+                /// Enable Cross-Origin resource sharing
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
 
-                /// Write the CsrfToken into a cookie for browser to store
+                /// Persist user sessions across requests
+                .securityContext(context ->
+                        context.securityContextRepository(securityContextRepository))
+
+                /// Return 401 instead of logic page direct
+                .exceptionHandling(e ->
+                                e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+
+                /// Disable CSRF protection for auth endpoints to allow the initial login handshake
                 .csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .ignoringRequestMatchers("/api/v1/auth/login**")
 
-                        /// Make the CsrfToken available as a request attribute.
+                        /// Use a cookie-based repository that React can access via JavaScript
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+
+                        /// Link the CsrfToken to request attributes so the doFilterInternal method can provide it to the React client
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 
-                /// Authorization requires the client to provide credentials
+                ///  Secured endpoints and whitelisted resources
                 .authorizeHttpRequests(auth -> auth
-
-                        /// Whitelist the root, index.html and Swagger docs
                         .requestMatchers("/", "/home/**","/images/**",
-                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-
-                        /// Restricts management namespace to ADMIN and ADMIN_TRAINEE roles
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"
+                                ,"/api/v1/auth/login**").permitAll()
                         .requestMatchers("/management/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.ADMIN_TRAINEE.name())
-
-                        /// Require credentials for the remaining endpoints
+                        .requestMatchers( "/api/v1/auth/logout", "/api/v1/profile/**").authenticated()
                         .anyRequest().authenticated())
 
-                /// Uncomment for basic Authentication protocol (Base64 username:password in header)
-                /// .httpBasic(Customizer.withDefaults())
+                /// Remember-me cookie expiration to 30 days (in seconds)
+                .rememberMe(remember ->
+                        remember.rememberMeServices(rememberMeServices))
 
-                /// Form Based Authentication with login
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll()
-                        ///  Redirect to dashboard
-                        .defaultSuccessUrl("/dashboard",true)
-                        ///  Form parameter
-                        .usernameParameter("username")
-                        .passwordParameter("password"))
-
-                ///  Sets remember-me cookie expiration to 30 days (in seconds)
-                .rememberMe(remember -> remember
-                        .tokenValiditySeconds(2592000)
-                        /// Hardcoding the key ensures the cookie remains valid after server restarts
-                        .key("uniqueAndSecret")
-                        ///  Form parameter
-                        .rememberMeParameter("remember-me")
-                        /// Look up the user account in memory once the cookie is validated
-                        .userDetailsService(applicationUserService))
-
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        ///  For logout success message in login.html
-                        .logoutSuccessUrl("/login?logout")
-                        ///  Clear data and invalidate session
-                        .deleteCookies("JSESSIONID", "remember-me")
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        ///  Allows all users to logout, with data cleared and session invalidated
-                        .permitAll())
-
-                ///  Uncomment for additional filter to trigger CsrfToken generation after basic auth
-                /// .addFilterAfter(new CsrfHeaderFilter(), BasicAuthenticationFilter.class);
-
-                /// Additional filter to trigger CsrfToken generation after form based auth
+                /// Ensure the CSRF token is updated in the header/cookie after authentication
                 .addFilterAfter(new CsrfHeaderFilter(), UsernamePasswordAuthenticationFilter.class)
-
-                /// Explicitly register the custom DaoAuthenticationProvider for credential verification.
+                /// Register the daoAuthenticationProvider to the authentication manager to enable database-backed user validation.
                 .authenticationProvider(daoAuthenticationProvider);
 
         return http.build();
+    }
+
+    @Bean
+    public RememberMeServices rememberMeServices(ApplicationUserService userDetailsService) {
+
+        TokenBasedRememberMeServices rememberMe =
+                new TokenBasedRememberMeServices("uniqueAndSecret", userDetailsService);
+
+        /// Create the rememberMe cookie
+        rememberMe.setAlwaysRemember(true);
+        /// Cookie validity 30 days
+        rememberMe.setTokenValiditySeconds(2592000);
+        /// Parameter for frontend
+        rememberMe.setParameter("rememberMe");
+        return rememberMe;
+
     }
 
 }
