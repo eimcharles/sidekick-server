@@ -16,24 +16,26 @@ import java.time.Instant;
 import java.util.Map;
 
 /**
- *      EmployeeProfileController provides self-service endpoints
- *      for the currently authenticated user to manage their own profile.
+ *      EmployeeController provides
+ *      self-service endpoints
+ *      for the currently authenticated
+ *      user to manage their own profile.
  * */
 
 @RestController
-@RequestMapping("api/v1/profile")
-public class EmployeeProfileController {
+@RequestMapping("api/v1/employees")
+public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final EmployeeProfileMapper employeeProfileMapper;
 
-    public EmployeeProfileController(EmployeeService employeeService,
-                                     EmployeeProfileMapper employeeProfileMapper) {
+    public EmployeeController(EmployeeService employeeService,
+                              EmployeeProfileMapper employeeProfileMapper) {
         this.employeeService = employeeService;
         this.employeeProfileMapper = employeeProfileMapper;
     }
 
-    @GetMapping
+    @GetMapping("/me")
     public ResponseEntity<HttpResponse> getEmployeeProfile(
             HttpServletRequest request,
             Authentication authentication){
@@ -54,7 +56,7 @@ public class EmployeeProfileController {
 
     }
 
-    @PatchMapping("/update-password")
+    @PatchMapping("/me/password")
     public ResponseEntity<HttpResponse> updatePassword(
             @RequestBody PasswordUpdateRequest passwordUpdateRequest,
             HttpServletRequest request,
