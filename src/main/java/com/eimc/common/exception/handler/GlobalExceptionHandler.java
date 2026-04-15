@@ -1,7 +1,7 @@
 package com.eimc.common.exception.handler;
 
 import com.eimc.common.domain.HttpResponse;
-import com.eimc.common.exception.BadCredentialsException;
+import com.eimc.common.exception.InvalidCurrentPasswordException;
 import com.eimc.common.exception.DuplicateResourceException;
 import com.eimc.common.exception.PasswordMismatchException;
 import com.eimc.common.exception.ResourceNotFoundException;
@@ -71,9 +71,9 @@ public class GlobalExceptionHandler {
 
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<HttpResponse> handleBadCredentialsException(
-            BadCredentialsException badCredentialsException,
+    @ExceptionHandler(InvalidCurrentPasswordException.class)
+    public ResponseEntity<HttpResponse> handleInvalidCurrentPasswordException(
+            InvalidCurrentPasswordException invalidCurrentPasswordException,
             HttpServletRequest request){
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
@@ -81,8 +81,8 @@ public class GlobalExceptionHandler {
                         .timeStamp(Instant.now())
                         .statusCode(HttpStatus.UNAUTHORIZED.value())
                         .status(HttpStatus.UNAUTHORIZED)
-                        .errorCode("BAD_PASSWORD_CREDENTIALS")
-                        .message(badCredentialsException.getMessage())
+                        .errorCode("INVALID_CURRENT_PASSWORD")
+                        .message(invalidCurrentPasswordException.getMessage())
                         .path(request.getRequestURI())
                         .requestMethod(request.getMethod())
                         .build());

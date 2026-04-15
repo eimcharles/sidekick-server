@@ -1,7 +1,7 @@
 package com.eimc.employee.service;
 
 import com.eimc.auth.model.ApplicationUser;
-import com.eimc.common.exception.BadCredentialsException;
+import com.eimc.common.exception.InvalidCurrentPasswordException;
 import com.eimc.common.exception.DuplicateResourceException;
 import com.eimc.common.exception.PasswordMismatchException;
 import com.eimc.common.exception.ResourceNotFoundException;
@@ -69,7 +69,7 @@ public class EmployeeService {
         ApplicationUser userAccount = employee.getApplicationUser();
 
         if (!passwordEncoder.matches(oldPassword, userAccount.getPassword())){
-            throw new BadCredentialsException("The current password is incorrect");
+            throw new InvalidCurrentPasswordException("The current password is incorrect");
         }
 
         userAccount.setPassword(passwordEncoder.encode(newPassword));
