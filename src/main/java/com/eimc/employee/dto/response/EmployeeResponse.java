@@ -13,7 +13,7 @@ public record EmployeeResponse(
         String email,
         String username
 
-) {
+) implements ProfileView {
 
     public static EmployeeResponse mapToResponse(Employee employee) {
         return new EmployeeResponse(
