@@ -1,6 +1,7 @@
 package com.eimc.common.exception.handler;
 
 import com.eimc.common.domain.HttpResponse;
+import org.springframework.security.authentication.BadCredentialsException;
 import com.eimc.common.exception.InvalidCurrentPasswordException;
 import com.eimc.common.exception.DuplicateResourceException;
 import com.eimc.common.exception.PasswordMismatchException;
@@ -87,6 +88,23 @@ public class GlobalExceptionHandler {
                         .requestMethod(request.getMethod())
                         .build());
 
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<HttpResponse> handleBadCredentialsException(
+            BadCredentialsException badCredentialsException,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                HttpResponse.builder()
+                        .timeStamp(Instant.now())
+                        .statusCode(HttpStatus.UNAUTHORIZED.value())
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .errorCode("AUTH_BAD_CREDENTIALS")
+                        .message("Invalid password or email")
+                        .path(request.getRequestURI())
+                        .requestMethod(request.getMethod())
+                        .build());
     }
 
 }
