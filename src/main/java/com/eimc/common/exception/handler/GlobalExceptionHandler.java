@@ -51,6 +51,24 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(InactiveResourceException.class)
+    public ResponseEntity<HttpResponse> handleInactiveResourceException(
+            InactiveResourceException inactiveResourceException,
+            HttpServletRequest request){
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                HttpResponse.builder()
+                        .timeStamp(Instant.now())
+                        .statusCode(HttpStatus.CONFLICT.value())
+                        .status(HttpStatus.CONFLICT)
+                        .errorCode("RESOURCE_INACTIVE")
+                        .message(inactiveResourceException.getMessage())
+                        .path(request.getRequestURI())
+                        .requestMethod(request.getMethod())
+                        .build());
+
+    }
+
     @ExceptionHandler(PasswordMismatchException.class)
     public ResponseEntity<HttpResponse> handlePasswordMismatchException(
             PasswordMismatchException passwordMismatchException,
