@@ -38,7 +38,7 @@ public class EmployeeService {
         ApplicationUser userAccount = employee.getApplicationUser();
 
         if (!userAccount.isEnabled()) {
-            throw new InactiveResourceException(String.format("Employee with email %s is inactive", email));
+            throw new InactiveResourceException(String.format("Employee with username %s is inactive", userAccount.getUsername()));
         }
 
         if (!passwordEncoder.matches(oldPassword, userAccount.getPassword())){
