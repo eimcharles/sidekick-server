@@ -1,11 +1,8 @@
 package com.eimc.common.exception.handler;
 
 import com.eimc.common.domain.HttpResponse;
+import com.eimc.common.exception.*;
 import org.springframework.security.authentication.BadCredentialsException;
-import com.eimc.common.exception.InvalidCurrentPasswordException;
-import com.eimc.common.exception.DuplicateResourceException;
-import com.eimc.common.exception.PasswordMismatchException;
-import com.eimc.common.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +24,7 @@ public class GlobalExceptionHandler {
                         .timeStamp(Instant.now())
                         .statusCode(HttpStatus.CONFLICT.value())
                         .status(HttpStatus.CONFLICT)
-                        .errorCode("USER_DUPLICATE_EMAIL")
+                        .errorCode("RESOURCE_ALREADY_EXISTS")
                         .message(duplicateResourceException.getMessage())
                         .path(request.getRequestURI())
                         .requestMethod(request.getMethod())
@@ -64,7 +61,7 @@ public class GlobalExceptionHandler {
                         .timeStamp(Instant.now())
                         .statusCode(HttpStatus.BAD_REQUEST.value())
                         .status(HttpStatus.BAD_REQUEST)
-                        .errorCode("PASSWORD_MISMATCH")
+                        .errorCode("AUTH_PASSWORD_MISMATCH")
                         .message(passwordMismatchException.getMessage())
                         .path(request.getRequestURI())
                         .requestMethod(request.getMethod())
@@ -82,7 +79,7 @@ public class GlobalExceptionHandler {
                         .timeStamp(Instant.now())
                         .statusCode(HttpStatus.UNAUTHORIZED.value())
                         .status(HttpStatus.UNAUTHORIZED)
-                        .errorCode("INVALID_CURRENT_PASSWORD")
+                        .errorCode("AUTH_INVALID_PASSWORD")
                         .message(invalidCurrentPasswordException.getMessage())
                         .path(request.getRequestURI())
                         .requestMethod(request.getMethod())
