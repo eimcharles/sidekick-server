@@ -3,6 +3,7 @@ package com.eimc.employee.service;
 import com.eimc.auth.model.ApplicationUser;
 import com.eimc.auth.model.UserRole;
 import com.eimc.common.exception.DuplicateResourceException;
+import com.eimc.common.exception.InactiveResourceException;
 import com.eimc.common.exception.ResourceNotFoundException;
 import com.eimc.employee.model.Employee;
 import com.eimc.employee.repository.EmployeeRepository;
@@ -31,8 +32,9 @@ public class EmployeeManagementService {
                                    String rawPassword,
                                    UserRole role) {
 
-        if (employeeRepository.existsByEmail(employee.getEmail()))
+        if (employeeRepository.existsByEmail(employee.getEmail())) {
             throw new DuplicateResourceException(String.format("Employee with email %s already exists", employee.getEmail()));
+        }
 
         ApplicationUser createdAccount = new ApplicationUser(employee,
                 passwordEncoder.encode(rawPassword),
@@ -44,14 +46,8 @@ public class EmployeeManagementService {
     }
 
     public Employee getEmployeeByEmployeeId(UUID employeeId){
-        Employee employee = employeeRepository.findByEmployeeId(employeeId)
+        return employeeRepository.findByEmployeeId(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("EmployeeId %s not found", employeeId)));
-
-        if (employee.isDeleted()) {
-            throw new ResourceNotFoundException(String.format("EmployeeId %s is inactive", employeeId));
-        }
-
-        return employee;
     }
 
 
@@ -62,6 +58,11 @@ public class EmployeeManagementService {
                                                String lastName) {
 
         Employee employeeToUpdate = getEmployeeByEmployeeId(employeeId);
+        ApplicationUser userAccount = employeeToUpdate.getApplicationUser();
+
+        if (!userAccount.isEnabled()){
+            throw new InactiveResourceException(String.format("Employee with username %s is inactive", userAccount.getUsername()));
+        }
 
         if (employeePosition != null && !employeePosition.isBlank()
                 && !employeePosition.equals(employeeToUpdate.getEmployeePosition())) {
@@ -85,10 +86,15 @@ public class EmployeeManagementService {
     public void deleteByEmployeeId(UUID employeeId) {
 
         Employee employeeToDelete = getEmployeeByEmployeeId(employeeId);
+        ApplicationUser userAccount = employeeToDelete.getApplicationUser();
+
+        if (!userAccount.isEnabled()){
+            throw new InactiveResourceException(String.format("Employee with username %s is inactive", userAccount.getUsername()));
+        }
 
         employeeToDelete.setIsDeleted(true);
         employeeToDelete.setDeletedAt(Instant.now());
-        employeeToDelete.getApplicationUser().setIsEnabled(false);
+        userAccount.setIsEnabled(false);
 
         employeeRepository.save(employeeToDelete);
     }
