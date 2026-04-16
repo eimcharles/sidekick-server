@@ -1,6 +1,7 @@
 package com.eimc.employee.service;
 
 import com.eimc.auth.model.ApplicationUser;
+import com.eimc.common.exception.InactiveResourceException;
 import com.eimc.common.exception.InvalidCurrentPasswordException;
 import com.eimc.common.exception.PasswordMismatchException;
 import com.eimc.common.exception.ResourceNotFoundException;
@@ -36,6 +37,10 @@ public class EmployeeService {
         Employee employee = getEmployeeByEmail(email);
         ApplicationUser userAccount = employee.getApplicationUser();
 
+        if (!userAccount.isEnabled()) {
+            throw new InactiveResourceException(String.format("Employee with email %s is inactive", email));
+        }
+
         if (!passwordEncoder.matches(oldPassword, userAccount.getPassword())){
             throw new InvalidCurrentPasswordException("The current password is incorrect");
         }
@@ -45,14 +50,8 @@ public class EmployeeService {
     }
 
     public Employee getEmployeeByEmail(String email) {
-        Employee employee = employeeRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Employee with %s not found", email)));
-
-        if (employee.isDeleted()) {
-            throw new ResourceNotFoundException(String.format("Employee with email %s is inactive", email));
-        }
-
-        return employee;
+        return employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Employee with email %s not found", email)));
     }
 
 }
