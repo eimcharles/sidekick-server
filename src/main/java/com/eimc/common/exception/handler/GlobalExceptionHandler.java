@@ -6,6 +6,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -116,7 +117,24 @@ public class GlobalExceptionHandler {
                         .statusCode(HttpStatus.UNAUTHORIZED.value())
                         .status(HttpStatus.UNAUTHORIZED)
                         .errorCode("AUTH_BAD_CREDENTIALS")
-                        .message("Invalid password or email")
+                        .message("Invalid password.")
+                        .path(request.getRequestURI())
+                        .requestMethod(request.getMethod())
+                        .build());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<HttpResponse> handleUsernameNotFoundException(
+            UsernameNotFoundException usernameNotFoundException,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                HttpResponse.builder()
+                        .timeStamp(Instant.now())
+                        .statusCode(HttpStatus.NOT_FOUND.value())
+                        .status(HttpStatus.NOT_FOUND)
+                        .errorCode("AUTH_USER_NOT_FOUND")
+                        .message("Invalid username.")
                         .path(request.getRequestURI())
                         .requestMethod(request.getMethod())
                         .build());
