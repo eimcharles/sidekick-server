@@ -6,6 +6,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -135,6 +136,23 @@ public class GlobalExceptionHandler {
                         .status(HttpStatus.NOT_FOUND)
                         .errorCode("AUTH_USER_NOT_FOUND")
                         .message("Invalid username.")
+                        .path(request.getRequestURI())
+                        .requestMethod(request.getMethod())
+                        .build());
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<HttpResponse> handleDisabledException(
+            DisabledException disabledException,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                HttpResponse.builder()
+                        .timeStamp(Instant.now())
+                        .statusCode(HttpStatus.FORBIDDEN.value())
+                        .status(HttpStatus.FORBIDDEN)
+                        .errorCode("AUTH_ACCOUNT_DISABLED")
+                        .message("Account disabled.")
                         .path(request.getRequestURI())
                         .requestMethod(request.getMethod())
                         .build());
