@@ -34,6 +34,7 @@ public class AuthConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
         provider.setUserDetailsService(applicationUserService);
+        provider.setHideUserNotFoundExceptions(false);
         return provider;
     }
 
