@@ -11,12 +11,12 @@
 	</parent>
 
 	<groupId>com.eimc</groupId>
-	<artifactId>spring-security-auth</artifactId>
+	<artifactId>sidekick-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>spring-security-auth</name>
-	<description>spring-security-auth</description>
-	<url>https://github.com/eimcharles/spring-security-auth</url>
+	<name>sidekick-server</name>
+	<description>Sidekick server backend server</description>
+	<url>https://github.com/eimcharles/sidekick-server</url>
 
 
 	<licenses>
@@ -35,9 +35,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/eimcharles/spring-security-auth.git</connection>
-		<developerConnection>scm:git:git@github.com:eimcharles/spring-security-auth.git</developerConnection>
-		<url>https://github.com/eimcharles/spring-security-auth</url>
+		<connection>scm:git:git://github.com/eimcharles/sidekick-server.git</connection>
+		<developerConnection>scm:git:git@github.com:eimcharles/sidekick-server.git</developerConnection>
+		<url>https://github.com/eimcharles/sidekick-server</url>
 	</scm>
 
 	<properties>
