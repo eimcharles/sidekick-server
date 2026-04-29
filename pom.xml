@@ -104,6 +104,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>sidekick-server</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
