@@ -13,9 +13,10 @@
 	<groupId>com.eimc</groupId>
 	<artifactId>sidekick-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<name>sidekick-server</name>
-	<description>Sidekick server backend server</description>
+	<description>Sidekick backend server</description>
 	<url>https://github.com/eimcharles/sidekick-server</url>
 
 
