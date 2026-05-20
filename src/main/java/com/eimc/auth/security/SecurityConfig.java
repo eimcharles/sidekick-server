@@ -91,7 +91,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/home/**","/images/**",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"
                                 ,"/api/v1/auth/login**").permitAll()
-                        .requestMatchers("/management/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.ADMIN_TRAINEE.name())
+                        .requestMatchers("/api/v1/admin/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.ADMIN_TRAINEE.name())
                         .requestMatchers( "/api/v1/auth/logout", "/api/v1/profile/**").authenticated()
                         .anyRequest().authenticated())
 

@@ -22,14 +22,14 @@ import java.util.Map;
  * */
 
 @RestController
-@RequestMapping("api/v1/employees")
-public class EmployeeController {
+@RequestMapping("/api/v1/employees")
+public class EmployeeSelfServiceController {
 
     private final EmployeeService employeeService;
     private final EmployeeProfileMapper employeeProfileMapper;
 
-    public EmployeeController(EmployeeService employeeService,
-                              EmployeeProfileMapper employeeProfileMapper) {
+    public EmployeeSelfServiceController(EmployeeService employeeService,
+                                         EmployeeProfileMapper employeeProfileMapper) {
         this.employeeService = employeeService;
         this.employeeProfileMapper = employeeProfileMapper;
     }

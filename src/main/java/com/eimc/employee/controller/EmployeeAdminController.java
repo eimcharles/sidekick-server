@@ -24,12 +24,12 @@ import java.util.UUID;
  * */
 
 @RestController
-@RequestMapping("management/api/v1/employees")
-public class EmployeeManagementController {
+@RequestMapping("/api/v1/admin/employees")
+public class EmployeeAdminController {
 
     private final EmployeeManagementService employeeManagementService;
 
-    public EmployeeManagementController(EmployeeManagementService employeeManagementService) {
+    public EmployeeAdminController(EmployeeManagementService employeeManagementService) {
         this.employeeManagementService = employeeManagementService;
     }
 
