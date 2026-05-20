@@ -23,13 +23,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 HttpResponse.builder()
-                        .timeStamp(Instant.now())
-                        .statusCode(HttpStatus.CONFLICT.value())
                         .status(HttpStatus.CONFLICT)
                         .errorCode("RESOURCE_ALREADY_EXISTS")
                         .message(duplicateResourceException.getMessage())
                         .path(request.getRequestURI())
-                        .requestMethod(request.getMethod())
                         .build()
 
         );
@@ -42,13 +39,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 HttpResponse.builder()
-                        .timeStamp(Instant.now())
-                        .statusCode(HttpStatus.NOT_FOUND.value())
                         .status(HttpStatus.NOT_FOUND)
                         .errorCode("RESOURCE_NOT_FOUND")
                         .message(resourceNotFoundException.getMessage())
                         .path(request.getRequestURI())
-                        .requestMethod(request.getMethod())
                         .build());
 
     }
@@ -60,13 +54,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 HttpResponse.builder()
-                        .timeStamp(Instant.now())
-                        .statusCode(HttpStatus.CONFLICT.value())
                         .status(HttpStatus.CONFLICT)
                         .errorCode("RESOURCE_INACTIVE")
                         .message(inactiveResourceException.getMessage())
                         .path(request.getRequestURI())
-                        .requestMethod(request.getMethod())
                         .build());
 
     }
@@ -78,13 +69,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 HttpResponse.builder()
-                        .timeStamp(Instant.now())
-                        .statusCode(HttpStatus.BAD_REQUEST.value())
                         .status(HttpStatus.BAD_REQUEST)
                         .errorCode("AUTH_PASSWORD_MISMATCH")
                         .message(passwordMismatchException.getMessage())
                         .path(request.getRequestURI())
-                        .requestMethod(request.getMethod())
                         .build());
 
     }
@@ -96,13 +84,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 HttpResponse.builder()
-                        .timeStamp(Instant.now())
-                        .statusCode(HttpStatus.UNAUTHORIZED.value())
                         .status(HttpStatus.UNAUTHORIZED)
                         .errorCode("AUTH_INVALID_PASSWORD")
                         .message(invalidCurrentPasswordException.getMessage())
                         .path(request.getRequestURI())
-                        .requestMethod(request.getMethod())
                         .build());
 
     }
@@ -114,13 +99,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 HttpResponse.builder()
-                        .timeStamp(Instant.now())
-                        .statusCode(HttpStatus.UNAUTHORIZED.value())
                         .status(HttpStatus.UNAUTHORIZED)
                         .errorCode("AUTH_BAD_CREDENTIALS")
                         .message("Invalid password.")
                         .path(request.getRequestURI())
-                        .requestMethod(request.getMethod())
                         .build());
     }
 
@@ -131,13 +113,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 HttpResponse.builder()
-                        .timeStamp(Instant.now())
-                        .statusCode(HttpStatus.NOT_FOUND.value())
                         .status(HttpStatus.NOT_FOUND)
                         .errorCode("AUTH_USER_NOT_FOUND")
                         .message("Invalid username.")
                         .path(request.getRequestURI())
-                        .requestMethod(request.getMethod())
                         .build());
     }
 
@@ -148,13 +127,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
                 HttpResponse.builder()
-                        .timeStamp(Instant.now())
-                        .statusCode(HttpStatus.FORBIDDEN.value())
                         .status(HttpStatus.FORBIDDEN)
                         .errorCode("AUTH_ACCOUNT_DISABLED")
                         .message("Account disabled.")
                         .path(request.getRequestURI())
-                        .requestMethod(request.getMethod())
                         .build());
     }
 

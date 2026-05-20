@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
 import java.util.Map;
 
 @RestController
@@ -80,13 +79,10 @@ public class AuthController {
         Employee employee = employeeService.getEmployeeByEmail(loginRequest.username());
 
         return ResponseEntity.ok().body(HttpResponse.builder()
-                .timeStamp(Instant.now())
-                .statusCode(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("Successfully logged in")
                 .path(request.getRequestURI())
-                .requestMethod(request.getMethod())
-                .data(Map.of("Employee", EmployeeResponse.mapToResponse(employee)))
+                .payload(Map.of("employee", EmployeeResponse.mapToResponse(employee)))
                 .build());
     }
 
@@ -103,12 +99,9 @@ public class AuthController {
         rememberMeServices.loginFail(request, response);
 
         return ResponseEntity.ok().body(HttpResponse.builder()
-                .timeStamp(Instant.now())
-                .statusCode(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("Successfully logged out")
                 .path(request.getRequestURI())
-                .requestMethod(request.getMethod())
                 .build());
     }
 

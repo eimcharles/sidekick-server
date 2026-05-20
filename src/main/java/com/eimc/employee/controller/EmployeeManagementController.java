@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -59,13 +58,10 @@ public class EmployeeManagementController {
 
         return ResponseEntity.created(resourceLocation)
                 .body(HttpResponse.builder()
-                .timeStamp(Instant.now())
-                .statusCode(HttpStatus.CREATED.value())
                 .status(HttpStatus.CREATED)
                 .message("Employee successfully created")
                 .path(resourceLocation.getPath())
-                .requestMethod(request.getMethod())
-                .data(Map.of("Employee", EmployeeAdminResponse
+                .payload(Map.of("employee", EmployeeAdminResponse
                         .mapToResponse(createdEmployee)))
                 .build());
 
@@ -79,13 +75,10 @@ public class EmployeeManagementController {
 
         Employee employee = employeeManagementService.getEmployeeByEmployeeId(employeeId);
         return ResponseEntity.ok().body(HttpResponse.builder()
-                .timeStamp(Instant.now())
-                .statusCode(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("Employee successfully retrieved")
                 .path(request.getRequestURI())
-                .requestMethod(request.getMethod())
-                .data(Map.of("Employee", EmployeeAdminResponse
+                .payload(Map.of("employee", EmployeeAdminResponse
                         .mapToResponse(employee)))
                 .build());
 
@@ -105,13 +98,10 @@ public class EmployeeManagementController {
                         employeeUpdateRequest.lastName());
 
         return ResponseEntity.ok().body(HttpResponse.builder()
-                .timeStamp(Instant.now())
-                .statusCode(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("Employee successfully updated")
                 .path(request.getRequestURI())
-                .requestMethod(request.getMethod())
-                .data(Map.of("Employee", EmployeeAdminResponse
+                .payload(Map.of("employee", EmployeeAdminResponse
                         .mapToResponse(updatedEmployee)))
                 .build());
 
@@ -125,12 +115,9 @@ public class EmployeeManagementController {
 
         employeeManagementService.deleteByEmployeeId(employeeId);
         return ResponseEntity.ok().body(HttpResponse.builder()
-                .timeStamp(Instant.now())
-                .statusCode(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("Employee successfully deleted")
                 .path(request.getRequestURI())
-                .requestMethod(request.getMethod())
                 .build());
 
     }
@@ -142,13 +129,10 @@ public class EmployeeManagementController {
         List<Employee> employees = employeeManagementService.getActiveEmployees();
 
         return ResponseEntity.ok().body(HttpResponse.builder()
-                .timeStamp(Instant.now())
-                .statusCode(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("Active employees successfully retrieved")
                 .path(request.getRequestURI())
-                .requestMethod(request.getMethod())
-                .data(Map.of("Active employees", employees.stream()
+                .payload(Map.of("Active employees", employees.stream()
                         .map(EmployeeAdminResponse::mapToResponse)
                         .toList()))
                 .build());
@@ -162,13 +146,10 @@ public class EmployeeManagementController {
         List<Employee> employees = employeeManagementService.getInactiveEmployees();
 
         return ResponseEntity.ok().body(HttpResponse.builder()
-                .timeStamp(Instant.now())
-                .statusCode(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("Inactive employees successfully retrieved")
                 .path(request.getRequestURI())
-                .requestMethod(request.getMethod())
-                .data(Map.of("Inactive employees", employees.stream()
+                .payload(Map.of("Inactive employees", employees.stream()
                         .map(EmployeeAdminResponse::mapToResponse)
                         .toList()))
                 .build());

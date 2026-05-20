@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.Map;
 
 /**
@@ -45,13 +44,10 @@ public class EmployeeController {
         ProfileView employeeProfile = employeeProfileMapper.mapToDTO(employee, authentication);
 
         return ResponseEntity.ok().body(HttpResponse.builder()
-                        .timeStamp(Instant.now())
-                        .statusCode(HttpStatus.OK.value())
                         .status(HttpStatus.OK)
                         .message("Profile successfully retrieved")
                         .path(request.getRequestURI())
-                        .requestMethod(request.getMethod())
-                        .data(Map.of("Employee", employeeProfile))
+                        .payload(Map.of("employee", employeeProfile))
                         .build());
 
     }
@@ -69,12 +65,9 @@ public class EmployeeController {
                 passwordUpdateRequest.newPasswordConfirmed());
 
         return ResponseEntity.ok().body(HttpResponse.builder()
-                .timeStamp(Instant.now())
-                .statusCode(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
                 .message("Password successfully updated")
                 .path(request.getRequestURI())
-                .requestMethod(request.getMethod())
                 .build());
 
     }
