@@ -1,6 +1,5 @@
 package com.eimc.auth.model;
 
-import com.google.common.collect.Sets;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -24,9 +23,9 @@ import static com.eimc.auth.model.UserPermissions.*;
 
 public enum UserRole {
 
-    ADMIN(Sets.newHashSet(EMPLOYEE_READ, EMPLOYEE_WRITE, EMPLOYEE_UPDATE, EMPLOYEE_DELETE)),
-    ADMIN_TRAINEE(Sets.newHashSet(EMPLOYEE_READ, EMPLOYEE_UPDATE)),
-    USER(Sets.newHashSet());
+    ADMIN(Set.of(EMPLOYEE_READ, EMPLOYEE_WRITE, EMPLOYEE_UPDATE, EMPLOYEE_DELETE)),
+    ADMIN_TRAINEE(Set.of(EMPLOYEE_READ, EMPLOYEE_UPDATE)),
+    USER(Set.of());
 
     private final Set<UserPermissions> userPermissions;
 
