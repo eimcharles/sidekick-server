@@ -1,8 +1,11 @@
 package com.eimc.employee.dto.response;
 
 import com.eimc.employee.model.Employee;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public record EmployeeResponse(
 
@@ -11,7 +14,9 @@ public record EmployeeResponse(
         String firstName,
         String lastName,
         String email,
-        String username
+        String username,
+        String userRole,
+        Set<String> grantedAuthorities
 
 ) implements ProfileView {
 
@@ -22,7 +27,13 @@ public record EmployeeResponse(
                 employee.getFirstName(),
                 employee.getLastName(),
                 employee.getEmail(),
-                employee.getApplicationUser().getUsername()
+                employee.getApplicationUser().getUsername(),
+                employee.getApplicationUser().getUserRole().name(),
+                employee.getApplicationUser()
+                        .getAuthorities()
+                        .stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toSet())
         );
     }
 

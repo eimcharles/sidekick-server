@@ -18,6 +18,7 @@ public record EmployeeAdminResponse(
         String lastName,
         String email,
         String username,
+        String userRole,
         Set<String> grantedAuthorities,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
@@ -35,6 +36,7 @@ public record EmployeeAdminResponse(
                 createdEmployee.getLastName(),
                 createdEmployee.getEmail(),
                 createdEmployee.getApplicationUser().getUsername(),
+                createdEmployee.getApplicationUser().getUserRole().name(),
                 createdEmployee.getApplicationUser()
                         .getAuthorities()
                         .stream()

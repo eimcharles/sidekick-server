@@ -36,10 +36,9 @@ public class ApplicationUser implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "authority")
-    private Set<String> grantedAuthorities;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole userRole;
 
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
@@ -51,7 +50,6 @@ public class ApplicationUser implements UserDetails {
     public ApplicationUser(Employee employee,
                            String username,
                            String password,
-                           Set<String> grantedAuthorities,
                            boolean isAccountNonExpired,
                            boolean isAccountNonLocked,
                            boolean isCredentialsNonExpired,
@@ -59,7 +57,6 @@ public class ApplicationUser implements UserDetails {
         this.employee = employee;
         this.username = username;
         this.password = password;
-        this.grantedAuthorities = grantedAuthorities;
         this.isAccountNonExpired = isAccountNonExpired;
         this.isAccountNonLocked = isAccountNonLocked;
         this.isCredentialsNonExpired = isCredentialsNonExpired;
@@ -68,11 +65,11 @@ public class ApplicationUser implements UserDetails {
 
     public ApplicationUser(Employee employee,
                            String password,
-                           Set<String> grantedAuthorities) {
+                           UserRole userRole) {
         this.employee = employee;
         this.username = employee.getEmail();
         this.password = password;
-        this.grantedAuthorities = grantedAuthorities;
+        this.userRole = userRole;
         this.isAccountNonExpired = true;
         this.isAccountNonLocked = true;
         this.isCredentialsNonExpired = true;
@@ -93,9 +90,7 @@ public class ApplicationUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return grantedAuthorities.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toSet());
+        return userRole.getGrantedAuthorities();
     }
 
     public void setId(Long id) {
@@ -108,6 +103,10 @@ public class ApplicationUser implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 
     public void setUsername(String username) {
@@ -133,6 +132,10 @@ public class ApplicationUser implements UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
     }
 
     @Override

@@ -38,7 +38,7 @@ public class EmployeeManagementService {
 
         ApplicationUser createdAccount = new ApplicationUser(employee,
                 passwordEncoder.encode(rawPassword),
-                role.getGrantedAuthoritiesAsStrings()
+                role
         );
 
         employee.setApplicationUser(createdAccount);
